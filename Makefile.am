@@ -1,0 +1,3 @@
+
+
+SUBDIRS = example inc src
