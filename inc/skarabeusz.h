@@ -96,8 +96,6 @@ namespace skarabeusz
     class virtual_door
     {
     private:
-        friend class collection_of_virtual_door;
-        friend class generator;
         std::list<std::vector<std::vector<bool>>> list_of_matrices;
         const unsigned chamber_id;
     public:
@@ -108,6 +106,9 @@ namespace skarabeusz
         void add_keys_from(const virtual_door & d);
         
         std::string get_description(const maze & m, std::list<std::vector<std::vector<bool>>>::const_iterator x) const;
+        
+        unsigned get_chamber_id() const { return chamber_id; }
+        std::list<std::vector<std::vector<bool>>> & get_list_of_matrices() { return list_of_matrices; }
     };
     
     class maze;
@@ -115,8 +116,6 @@ namespace skarabeusz
     class collection_of_virtual_door
 	{
 	private:
-        friend class maze;
-        friend class generator;
 		std::list<virtual_door> list_of_virtual_door;        
     public:
 		void push_back(const virtual_door & d) { list_of_virtual_door.push_back(d); }  
@@ -126,6 +125,8 @@ namespace skarabeusz
         void merge_classes(const std::vector<std::vector<bool>> & k1, const std::vector<std::vector<bool>> & k2);
         
         std::string get_description(const maze & m) const;
+        
+        std::list<virtual_door> & get_list_of_virtual_door() { return list_of_virtual_door; }
     };
 
     
@@ -134,13 +135,9 @@ namespace skarabeusz
     
     class room
     {
-    private:
-        friend class maze;
-        friend class chamber;
-        friend class door;
-        friend class generator;
-        friend class collection_of_virtual_door;
+    public:
         enum class direction_type { NORTH, EAST, SOUTH, WEST, UP, DOWN };
+    private:        
         unsigned x,y,z;
         
         unsigned chamber_id;
@@ -153,6 +150,7 @@ namespace skarabeusz
         
     public:
         room(): chamber_id{0}, x{0} , y{0}, z{0}, is_seed_room{false} {}
+        
         void set_coordinates(unsigned nx, unsigned ny, unsigned nz);
         
         bool get_is_assigned_to_any_chamber() const { return chamber_id > 0; }
@@ -177,14 +175,17 @@ namespace skarabeusz
         bool get_has_door_leading(direction_type d) const;
         
         bool get_door_can_be_opened_with(direction_type d, const keys & k) const;
+        
+        unsigned get_x() const { return x; }
+        unsigned get_y() const { return y; }
+        unsigned get_z() const { return z; }
+        const std::string get_name() const { return name; }
+        std::list<std::shared_ptr<door>> & get_list_of_door() { return list_of_door; }
     };
 
     class door
     {
-    private:
-        friend class maze;
-        friend class room;
-        
+    private:                
         room & target_room;
         unsigned chamber1,chamber2;
         room::direction_type direction;
@@ -193,21 +194,31 @@ namespace skarabeusz
         door(unsigned c1, unsigned c2, room & r, room::direction_type d): chamber1{c1}, chamber2{c2}, target_room{r}, direction{d} {}
         
         room::direction_type get_direction() const { return direction; }
+        
+        room & get_target_room() { return target_room; }
+        
+        unsigned get_chamber1() const { return chamber1; }
+        unsigned get_chamber2() const { return chamber2; }
     };
     
     class chamber
     {
     private:
-        friend class maze;
-        friend class collection_of_virtual_door;
-        friend class generator;
         unsigned id;        
-        struct seed_type { unsigned x,y,z; } seed;
+        struct seed_type 
+        { 
+            unsigned x,y,z; 
+            void set_x(unsigned nx) { x=nx; }
+            void set_y(unsigned ny) { y=ny; }
+            void set_z(unsigned nz) { z=nz; }
+        } seed;
         std::string guardian_name;
     public:
         chamber(): id{0} {}
         
         void set_guardian_name(const std::string & gn) { guardian_name = gn; }
+        
+        std::string get_guardian_name() const { return guardian_name; }
         
         void set_id(unsigned nid) { id = nid; }
         
@@ -222,6 +233,9 @@ namespace skarabeusz
         void grow_in_direction(room::direction_type d, maze & m) const;
         
         std::string get_description(const maze & m) const;
+        
+        const seed_type & get_seed() const { return seed; }
+        seed_type & get_seed() { return seed; }
     };
     
     
@@ -229,10 +243,7 @@ namespace skarabeusz
     
     class keys
     {
-    private:
-        friend class generator;
-        friend class maze;
-        friend class room;
+    private:        
         std::vector<std::vector<bool>> matrix;
     public:
         keys(const maze & m);
@@ -250,13 +261,15 @@ namespace skarabeusz
         keys& operator=(bool v);
         
         void report(std::ostream & s) const;
+        
+        std::vector<std::vector<bool>> & get_matrix() { return matrix; }
+        
+        const std::vector<std::vector<bool>> & get_matrix() const { return matrix; }
     };
     
     class chamber_and_keys
     {
     private:
-        friend class generator;
-        friend class maze;
         unsigned chamber_id;
         keys my_keys;
         bool done;
@@ -308,12 +321,9 @@ namespace skarabeusz
     
     class paragraph
     {
-    private:
-        friend class generator;
-        friend class hyperlink;
-        friend class maze;
+    public:
         enum class paragraph_type { CHAMBER_DESCRIPTION, DISCUSSION, DOOR };
-
+    private:
         bool ending;
         unsigned number;        
         chamber_and_keys my_state;
@@ -325,6 +335,22 @@ namespace skarabeusz
         paragraph(unsigned n, const chamber_and_keys & c, unsigned nx, unsigned ny, unsigned nz, paragraph_type t): number{n}, my_state{c}, type{t}, x{nx}, y{ny},z{nz}, ending{false} {}
         void add(std::unique_ptr<paragraph_item> && i) { list_of_paragraph_items.push_back(std::move(i)); }
         void print(std::ostream & s) const;
+        
+        chamber_and_keys& get_state() { return my_state; }
+        
+        bool get_ending() const { return ending; }
+        
+        void set_ending(bool e) { ending = e; }
+        
+        void set_number(unsigned n) { number = n; }
+        
+        unsigned get_number() const { return number; }
+        
+        unsigned get_x() const { return x; }
+        unsigned get_y() const { return y; }
+        unsigned get_z() const { return z; }
+        
+        paragraph_type get_type() const { return type; }
     };
 
     

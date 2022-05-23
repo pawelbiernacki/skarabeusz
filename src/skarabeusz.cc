@@ -191,7 +191,7 @@ std::string skarabeusz::chamber::get_description(const maze & m) const
         {
             if (m.array_of_rooms[x][y][z1]->get_is_seed_room())
             {
-                result << m.array_of_rooms[x][y][z1]->name << ". ";
+                result << m.array_of_rooms[x][y][z1]->get_name() << ". ";
             }
         }
     }
@@ -235,7 +235,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
                 if (array_of_rooms[x][y1][z1]->get_has_door_leading(room::direction_type::NORTH))
                 {
                     amount++;
-                    name = array_of_rooms[x][y1][z1]->name;
+                    name = array_of_rooms[x][y1][z1]->get_name();
                 }
             }
             if (amount==0) return "";            
@@ -251,7 +251,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
                 {
                     if (array_of_rooms[x][y1][z1]->get_has_door_leading(room::direction_type::NORTH))
                     {
-                        result << array_of_rooms[x][y1][z1]->name << " ";
+                        result << array_of_rooms[x][y1][z1]->get_name() << " ";
                     }
                 }                
                 result << ". ";
@@ -263,7 +263,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
                 if (array_of_rooms[x2][y][z1]->get_has_door_leading(room::direction_type::EAST))
                 {
                     amount++;
-                    name = array_of_rooms[x2][y][z1]->name;
+                    name = array_of_rooms[x2][y][z1]->get_name();
                 }
             }            
             if (amount==0) return "";            
@@ -277,7 +277,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
                 {
                     if (array_of_rooms[x2][y][z1]->get_has_door_leading(room::direction_type::EAST))
                     {
-                        result << array_of_rooms[x2][y][z1]->name << " ";
+                        result << array_of_rooms[x2][y][z1]->get_name() << " ";
                     }
                 }                            
                 result << ". ";
@@ -289,7 +289,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
                 if (array_of_rooms[x][y2][z1]->get_has_door_leading(room::direction_type::SOUTH))
                 {
                     amount++;
-                    name = array_of_rooms[x][y2][z1]->name;
+                    name = array_of_rooms[x][y2][z1]->get_name();
                 }
             }
             if (amount==0) return "";
@@ -303,7 +303,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
                 {
                     if (array_of_rooms[x][y2][z1]->get_has_door_leading(room::direction_type::SOUTH))
                     {
-                        result << array_of_rooms[x][y2][z1]->name << " ";                        
+                        result << array_of_rooms[x][y2][z1]->get_name() << " ";                        
                     }
                 }
                 result << ". ";
@@ -315,7 +315,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
                 if (array_of_rooms[x1][y][z1]->get_has_door_leading(room::direction_type::WEST))
                 {
                     amount++;
-                    name = array_of_rooms[x1][y][z1]->name;
+                    name = array_of_rooms[x1][y][z1]->get_name();
                 }
             }                        
             if (amount==0) return "";            
@@ -329,7 +329,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
                 {
                     if (array_of_rooms[x1][y][z1]->get_has_door_leading(room::direction_type::WEST))
                     {
-                        result << array_of_rooms[x1][y][z1]->name << " ";
+                        result << array_of_rooms[x1][y][z1]->get_name() << " ";
                     }
                 }              
                 result << ". ";
@@ -343,7 +343,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
                     if (array_of_rooms[x][y][z2]->get_has_door_leading(room::direction_type::UP))
                     {
                         amount++;
-                        name = array_of_rooms[x][y][z2]->name;
+                        name = array_of_rooms[x][y][z2]->get_name();
                     }
                 }
             }                        
@@ -360,7 +360,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
                     {
                         if (array_of_rooms[x][y][z1]->get_has_door_leading(room::direction_type::UP))
                         {
-                            result << array_of_rooms[x][y][z1]->name << " ";
+                            result << array_of_rooms[x][y][z1]->get_name() << " ";
                         }
                     }
                 }
@@ -375,7 +375,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
                     if (array_of_rooms[x][y][z1]->get_has_door_leading(room::direction_type::DOWN))
                     {
                         amount++;
-                        name = array_of_rooms[x][y][z2]->name;
+                        name = array_of_rooms[x][y][z2]->get_name();
                     }
                 }
             }                        
@@ -392,7 +392,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
                     {
                         if (array_of_rooms[x][y][z1]->get_has_door_leading(room::direction_type::DOWN))
                         {
-                            result << array_of_rooms[x][y][z1]->name << " ";
+                            result << array_of_rooms[x][y][z1]->get_name() << " ";
                         }
                     }
                 }
@@ -416,7 +416,7 @@ std::string skarabeusz::maze::get_keys_description_after_exchange(const keys & k
     {
         for (unsigned j=i+1; j<amount_of_chambers; j++)
         {
-            if (k.matrix[i][j]) { amount++; t=number+1; }
+            if (k.get_matrix()[i][j]) { amount++; t=number+1; }
             number++;
         }
     }
@@ -435,7 +435,7 @@ std::string skarabeusz::maze::get_keys_description_after_exchange(const keys & k
         {
             for (unsigned j=i+1; j<amount_of_chambers; j++)
             {
-                if (k.matrix[i][j]) { s << (number+1) << " "; }
+                if (k.get_matrix()[i][j]) { s << (number+1) << " "; }
                 number++;
             }
         }
@@ -455,7 +455,7 @@ std::string skarabeusz::maze::get_keys_description(const keys & k) const
     {
         for (unsigned j=i+1; j<amount_of_chambers; j++)
         {
-            if (k.matrix[i][j]) { amount++; t=number+1; }
+            if (k.get_matrix()[i][j]) { amount++; t=number+1; }
             number++;
         }
     }
@@ -474,7 +474,7 @@ std::string skarabeusz::maze::get_keys_description(const keys & k) const
         {
             for (unsigned j=i+1; j<amount_of_chambers; j++)
             {
-                if (k.matrix[i][j]) { s << (number+1) << " "; }
+                if (k.get_matrix()[i][j]) { s << (number+1) << " "; }
                 number++;
             }
         }
@@ -502,13 +502,13 @@ std::string skarabeusz::collection_of_virtual_door::get_description(const maze &
     }
     else
     {
-        chamber_id = list_of_virtual_door.begin()->chamber_id-1;
+        chamber_id = list_of_virtual_door.begin()->get_chamber_id()-1;
         
         DEBUG("collection_of_virtual_door::get_description chamber_id = " << chamber_id);
-        DEBUG("x,y,z = " << m.vector_of_chambers[chamber_id]->seed.x << "," << m.vector_of_chambers[chamber_id]->seed.y << "," << m.vector_of_chambers[chamber_id]->seed.z);
+        DEBUG("x,y,z = " << m.vector_of_chambers[chamber_id]->get_seed().x << "," << m.vector_of_chambers[chamber_id]->get_seed().y << "," << m.vector_of_chambers[chamber_id]->get_seed().z);
         
         s << "Rozmawiasz z krasnoludem na polu " 
-        << m.array_of_rooms[m.vector_of_chambers[chamber_id]->seed.x][m.vector_of_chambers[chamber_id]->seed.y][m.vector_of_chambers[chamber_id]->seed.z]->name << ". ";                
+        << m.array_of_rooms[m.vector_of_chambers[chamber_id]->get_seed().x][m.vector_of_chambers[chamber_id]->get_seed().y][m.vector_of_chambers[chamber_id]->get_seed().z]->get_name() << ". ";                
     }
     
     return s.str();
@@ -518,7 +518,7 @@ bool skarabeusz::room::get_door_can_be_opened_with(direction_type d, const keys 
 {
     for (auto &a: list_of_door)
     {
-        if (a->direction == d && k.matrix[a->chamber1-1][a->chamber2-1])
+        if (a->get_direction() == d && k.get_matrix()[a->get_chamber1()-1][a->get_chamber2()-1])
         {
             return true;
         }
@@ -531,7 +531,7 @@ unsigned skarabeusz::maze::get_paragraph_index(unsigned x, unsigned y, unsigned 
 {
     for (unsigned i=0; i<vector_of_paragraphs.size(); i++)
     {
-        if (vector_of_paragraphs[i]->my_state.my_keys == k && vector_of_paragraphs[i]->x == x && vector_of_paragraphs[i]->y == y && vector_of_paragraphs[i]->z == z && vector_of_paragraphs[i]->type == t)
+        if (vector_of_paragraphs[i]->get_state().get_keys() == k && vector_of_paragraphs[i]->get_x() == x && vector_of_paragraphs[i]->get_y() == y && vector_of_paragraphs[i]->get_z() == z && vector_of_paragraphs[i]->get_type() == t)
         {
             return i;
         }
@@ -543,7 +543,7 @@ unsigned skarabeusz::maze::get_paragraph_index(unsigned chamber_id, const keys &
 {
     for (unsigned i=0; i<vector_of_paragraphs.size(); i++)
     {
-        if (vector_of_paragraphs[i]->my_state.chamber_id == chamber_id && vector_of_paragraphs[i]->my_state.my_keys == k && vector_of_paragraphs[i]->type == t)
+        if (vector_of_paragraphs[i]->get_state().get_chamber_id() == chamber_id && vector_of_paragraphs[i]->get_state().get_keys() == k && vector_of_paragraphs[i]->get_type() == t)
         {
             return i;
         }
@@ -585,9 +585,9 @@ void skarabeusz::generator::generate_paragraphs()
         {
             index = distr(get_random_number_generator());
         }
-        while (target.vector_of_paragraphs[index+amount_of_chamber_descriptions]->ending);
+        while (target.vector_of_paragraphs[index+amount_of_chamber_descriptions]->get_ending());
         
-        target.vector_of_paragraphs[index+amount_of_chamber_descriptions]->ending = true;
+        target.vector_of_paragraphs[index+amount_of_chamber_descriptions]->set_ending(true);
         amount_of_endings++;        
     }
     while (amount_of_endings < parameters.amount_of_alternative_endings);
@@ -612,7 +612,7 @@ void skarabeusz::generator::generate_paragraphs()
             {
                 for (unsigned z=z1; z<=z2; z++)
                 {
-                    if (target.array_of_rooms[x][y][z]->list_of_door.size()>0)
+                    if (target.array_of_rooms[x][y][z]->get_list_of_door().size()>0)
                     {
                         target.vector_of_paragraphs.push_back(std::make_unique<paragraph>(++number, c, x,y,z, paragraph::paragraph_type::DOOR));
                         amount_of_door_rooms++;
@@ -626,22 +626,22 @@ void skarabeusz::generator::generate_paragraphs()
     
     for (unsigned i=0; i<amount_of_chamber_descriptions; i++)
     {
-        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.vector_of_chambers[target.vector_of_paragraphs[i]->my_state.chamber_id]->get_description(target)));
+        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.vector_of_chambers[target.vector_of_paragraphs[i]->get_state().get_chamber_id()]->get_description(target)));
     }
     
     number=amount_of_chamber_descriptions + amount_of_discussions;
     
     for (unsigned i=0; i<amount_of_chamber_descriptions; i++)
     {
-        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.get_keys_description(target.vector_of_paragraphs[i]->my_state.my_keys)));
+        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.get_keys_description(target.vector_of_paragraphs[i]->get_state().get_keys())));
                 
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Co chcesz zrobić? "));
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Porozmawiać z krasnoludem - idź do "));
         target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[i+amount_of_chamber_descriptions]));
         
         unsigned x1,x2,y1,y2,z1,z2;
-        unsigned chamber_id = target.vector_of_paragraphs[i+amount_of_chamber_descriptions]->my_state.chamber_id+1;
-        keys & k=target.vector_of_paragraphs[i+amount_of_chamber_descriptions]->my_state.my_keys;
+        unsigned chamber_id = target.vector_of_paragraphs[i+amount_of_chamber_descriptions]->get_state().get_chamber_id()+1;
+        keys & k=target.vector_of_paragraphs[i+amount_of_chamber_descriptions]->get_state().get_keys();
         
         DEBUG("chamber_id " << chamber_id);
 
@@ -658,16 +658,16 @@ void skarabeusz::generator::generate_paragraphs()
             {
                 for (unsigned z=z1; z<=z2; z++)
                 {
-                    if (target.array_of_rooms[x][y][z]->list_of_door.size()>0)
+                    if (target.array_of_rooms[x][y][z]->get_list_of_door().size()>0)
                     {                        
                         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Iść na pole "));
-                        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.array_of_rooms[x][y][z]->name));                        
+                        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.array_of_rooms[x][y][z]->get_name()));                        
                         target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[number]));
                         
                         target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Stoisz przed drzwiami na polu "));
-                        target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(target.array_of_rooms[x][y][z]->name));
+                        target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(target.array_of_rooms[x][y][z]->get_name()));
                         target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(". "));                        
-                        target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(target.get_keys_description(target.vector_of_paragraphs[i]->my_state.my_keys)));
+                        target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(target.get_keys_description(target.vector_of_paragraphs[i]->get_state().get_keys())));
 
                         for (unsigned d=0; d<6; d++)
                         {
@@ -678,7 +678,7 @@ void skarabeusz::generator::generate_paragraphs()
                                 {
                                     case room::direction_type::NORTH:
                                         
-                                        if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->my_state.my_keys))
+                                        if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
                                             target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz iść na północ "));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y-1,z,k, paragraph::paragraph_type::DOOR)]));
@@ -689,7 +689,7 @@ void skarabeusz::generator::generate_paragraphs()
                                         }
                                         break;
                                     case room::direction_type::EAST:
-                                        if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->my_state.my_keys))
+                                        if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
                                             target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz iść na wschód "));
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x+1,y,z,k, paragraph::paragraph_type::DOOR)]));
@@ -700,7 +700,7 @@ void skarabeusz::generator::generate_paragraphs()
                                         }
                                         break;
                                     case room::direction_type::SOUTH:
-                                        if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->my_state.my_keys))
+                                        if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
                                             target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz iść na południe "));
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y+1,z,k, paragraph::paragraph_type::DOOR)]));                                            
@@ -711,7 +711,7 @@ void skarabeusz::generator::generate_paragraphs()
                                         }
                                         break;
                                     case room::direction_type::WEST:
-                                        if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->my_state.my_keys))
+                                        if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
                                             target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz iść na zachód "));
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x-1,y,z,k, paragraph::paragraph_type::DOOR)]));
@@ -722,7 +722,7 @@ void skarabeusz::generator::generate_paragraphs()
                                         }                                            
                                         break;
                                     case room::direction_type::DOWN:
-                                        if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->my_state.my_keys))
+                                        if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
                                             target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz zejść na niższy poziom "));
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y,z-1,k, paragraph::paragraph_type::DOOR)]));
@@ -733,7 +733,7 @@ void skarabeusz::generator::generate_paragraphs()
                                         }
                                         break;
                                     case room::direction_type::UP:
-                                        if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->my_state.my_keys))
+                                        if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
                                             target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz wejść na wyższy poziom "));
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y,z+1,k, paragraph::paragraph_type::DOOR)]));
@@ -748,7 +748,7 @@ void skarabeusz::generator::generate_paragraphs()
                         }
                         
                         target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz się rozejrzeć "));
-                        target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[number]->my_state.chamber_id,target.vector_of_paragraphs[number]->my_state.my_keys, paragraph::paragraph_type::CHAMBER_DESCRIPTION)]));
+                        target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[number]->get_state().get_chamber_id(),target.vector_of_paragraphs[number]->get_state().get_keys(), paragraph::paragraph_type::CHAMBER_DESCRIPTION)]));
                                                 
                         number++;                        
                     }
@@ -761,37 +761,37 @@ void skarabeusz::generator::generate_paragraphs()
     
     for (unsigned i=amount_of_chamber_descriptions; i<amount_of_chamber_descriptions+amount_of_discussions; i++)
     {
-        DEBUG("get from chamber " << target.vector_of_paragraphs[i]->my_state.chamber_id);        
-        unsigned chamber_id = target.vector_of_paragraphs[i]->my_state.chamber_id+1;
-        keys & k=target.vector_of_paragraphs[i]->my_state.my_keys;
+        DEBUG("get from chamber " << target.vector_of_paragraphs[i]->get_state().get_chamber_id());        
+        unsigned chamber_id = target.vector_of_paragraphs[i]->get_state().get_chamber_id()+1;
+        keys & k=target.vector_of_paragraphs[i]->get_state().get_keys();
                 
-        auto it = std::find_if(target.vector_of_virtual_door[target.vector_of_paragraphs[i]->my_state.chamber_id].list_of_virtual_door.begin(),
-                     target.vector_of_virtual_door[target.vector_of_paragraphs[i]->my_state.chamber_id].list_of_virtual_door.end(),
-                     [&k](auto & x){return x.get_contains(k.matrix);});
+        auto it = std::find_if(target.vector_of_virtual_door[target.vector_of_paragraphs[i]->get_state().get_chamber_id()].get_list_of_virtual_door().begin(),
+                     target.vector_of_virtual_door[target.vector_of_paragraphs[i]->get_state().get_chamber_id()].get_list_of_virtual_door().end(),
+                     [&k](auto & x){return x.get_contains(k.get_matrix());});
         
         
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Stoisz obok krasnoluda na polu "));
-        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.array_of_rooms[target.vector_of_chambers[chamber_id-1]->seed.x][target.vector_of_chambers[chamber_id-1]->seed.y][target.vector_of_chambers[chamber_id-1]->seed.z]->name));
+        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.array_of_rooms[target.vector_of_chambers[chamber_id-1]->get_seed().x][target.vector_of_chambers[chamber_id-1]->get_seed().y][target.vector_of_chambers[chamber_id-1]->get_seed().z]->get_name()));
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(". "));                        
         
         
-        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.get_keys_description(target.vector_of_paragraphs[i]->my_state.my_keys)));
+        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.get_keys_description(target.vector_of_paragraphs[i]->get_state().get_keys())));
         
         bool exchange = false;
         
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Witaj, nazywam się "));
-        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.vector_of_chambers[chamber_id-1]->guardian_name));
+        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.vector_of_chambers[chamber_id-1]->get_guardian_name()));
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(". "));
         
-        if (target.vector_of_paragraphs[i]->ending)
+        if (target.vector_of_paragraphs[i]->get_ending())
         {
             target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Gratulacje! Udało Ci się!"));
         }        
         else
         {
-            if (it != target.vector_of_virtual_door[target.vector_of_paragraphs[i]->my_state.chamber_id].list_of_virtual_door.end())
+            if (it != target.vector_of_virtual_door[target.vector_of_paragraphs[i]->get_state().get_chamber_id()].get_list_of_virtual_door().end())
             {
-                for (auto x=it->list_of_matrices.begin(); x!=it->list_of_matrices.end(); x++)
+                for (auto x=it->get_list_of_matrices().begin(); x!=it->get_list_of_matrices().end(); x++)
                 {
                     keys k2{*x};
                     if (k != k2)
@@ -800,7 +800,7 @@ void skarabeusz::generator::generate_paragraphs()
                         exchange=true;
                         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(t));
                         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Jeżeli się zgadzasz przejdź do "));                                        
-                        target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[i]->my_state.chamber_id, k2, paragraph::paragraph_type::DISCUSSION)]));
+                        target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[i]->get_state().get_chamber_id(), k2, paragraph::paragraph_type::DISCUSSION)]));
                         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(". "));
                     }
                 }
@@ -812,14 +812,14 @@ void skarabeusz::generator::generate_paragraphs()
         }
 
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Możesz się rozejrzeć "));
-        target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[i]->my_state.chamber_id,target.vector_of_paragraphs[i]->my_state.my_keys, paragraph::paragraph_type::CHAMBER_DESCRIPTION)]));        
+        target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[i]->get_state().get_chamber_id(),target.vector_of_paragraphs[i]->get_state().get_keys(), paragraph::paragraph_type::CHAMBER_DESCRIPTION)]));        
     }
     
     std::shuffle(target.vector_of_paragraphs.begin(), target.vector_of_paragraphs.end(), gen);
     
     for (unsigned i=0; i<target.vector_of_paragraphs.size(); i++)
     {
-        target.vector_of_paragraphs[i]->number = i+1;
+        target.vector_of_paragraphs[i]->set_number(i+1);
     }
     
     
@@ -872,11 +872,11 @@ bool skarabeusz::virtual_door::get_contains(const std::vector<std::vector<bool> 
 bool skarabeusz::generator::get_there_is_a_transition(const chamber_and_keys & p1, const chamber_and_keys & p2)
 {
 	// the keys are equal and there is a transition through a door
-	if (p1.get_keys() == p2.get_keys() && p1.get_keys().matrix[p1.get_chamber_id()-1][p2.get_chamber_id()-1])
+	if (p1.get_keys() == p2.get_keys() && p1.get_keys().get_matrix()[p1.get_chamber_id()-1][p2.get_chamber_id()-1])
 		return true;
 
 	// the chambers are equal and the keys can be exchanged
-	if (p1.get_chamber_id() == p2.get_chamber_id() && target.vector_of_virtual_door[p1.get_chamber_id()-1].get_can_exchange(p1.get_keys().matrix, p2.get_keys().matrix))
+	if (p1.get_chamber_id() == p2.get_chamber_id() && target.vector_of_virtual_door[p1.get_chamber_id()-1].get_can_exchange(p1.get_keys().get_matrix(), p2.get_keys().get_matrix()))
 	{
 		return true;
 	}
@@ -971,7 +971,7 @@ void skarabeusz::collection_of_virtual_door::merge_classes(const std::vector<std
 	}
 
 	// create a class containing all the items
-	virtual_door d{a->chamber_id};
+	virtual_door d{a->get_chamber_id()};
 	d.add_keys_from(*a);
 	d.add_keys_from(*b);
         
@@ -990,7 +990,7 @@ void skarabeusz::generator::process_a_journey(unsigned chamber1, keys & keys1, u
 	vector_of_pairs_chamber_and_keys.clear();
 	for (std::list<std::pair<unsigned, keys>>::iterator i(list_of_processed_pairs_chamber_and_keys.begin()); i != list_of_processed_pairs_chamber_and_keys.end(); i++)
 	{
-		chamber_and_keys c((*i).first+1, (*i).second.matrix);
+		chamber_and_keys c((*i).first+1, (*i).second.get_matrix());
 		vector_of_pairs_chamber_and_keys.push_back(c);
 	}
 
@@ -1024,8 +1024,8 @@ void skarabeusz::generator::process_a_journey(unsigned chamber1, keys & keys1, u
 
 			unsigned c = vector_of_pairs_chamber_and_keys[candidate_done].get_chamber_id();
 
-			target.vector_of_virtual_door[c-1].merge_classes(vector_of_pairs_chamber_and_keys[candidate_not_done].get_keys().matrix, 
-                                                                  vector_of_pairs_chamber_and_keys[candidate_done].get_keys().matrix);
+			target.vector_of_virtual_door[c-1].merge_classes(vector_of_pairs_chamber_and_keys[candidate_not_done].get_keys().get_matrix(), 
+                                                                  vector_of_pairs_chamber_and_keys[candidate_done].get_keys().get_matrix());
 
 			if (!process_a_journey_step())
 				throw std::runtime_error("internal error");
@@ -1066,7 +1066,7 @@ void skarabeusz::generator::copy_the_equivalence_classes_to_the_maze()
             
 			for (std::list<keys>::const_iterator k((*j).begin()); k != (*j).end(); k++)
 			{
-				d.push_back((*k).matrix);
+				d.push_back((*k).get_matrix());
 			}
 			target.vector_of_virtual_door[i-1].push_back(d);
 		}
@@ -1243,7 +1243,7 @@ void skarabeusz::generator::generate_list_of_keys()
                 
                 DEBUG("checking " << chamber1 << " to " << chamber2);
                                                 
-                if (k.matrix[chamber1-1][chamber2-1])
+                if (k.get_matrix()[chamber1-1][chamber2-1])
                 {
                     keys k2{k};
                     DEBUG("chamber " << chamber1 << " to " << chamber2);
@@ -1257,7 +1257,7 @@ void skarabeusz::generator::generate_list_of_keys()
                         {
                             for (unsigned b=a+1;b<=target.amount_of_chambers;b++)
                             {
-                                if (k2.matrix[a-1][b-1])
+                                if (k2.get_matrix()[a-1][b-1])
                                 {
                                     keys_to_select.push_back(std::pair(a-1,b-1));
                                 }
@@ -1282,22 +1282,22 @@ void skarabeusz::generator::generate_list_of_keys()
                             for (unsigned i=0; i<amount_of_keys_to_select; i++)
                             {
                                 auto [a,b]=keys_to_select[vector_of_indeces_to_select[i]];
-                                k2.matrix[a][b]=true;
-                                k2.matrix[b][a]=true;
+                                k2.get_matrix()[a][b]=true;
+                                k2.get_matrix()[b][a]=true;
                             }
                             
                             //k2.report(std::cout);
                             
                             if (std::find(list_of_keys.begin(),list_of_keys.end(), k2)==list_of_keys.end())
                             {
-                                if (k2.get_amount_of_keys() != 0 && k2.get_amount_of_keys()<=parameters.max_amount_of_keys_to_hold && k2.matrix[chamber1-1][chamber2-1])
+                                if (k2.get_amount_of_keys() != 0 && k2.get_amount_of_keys()<=parameters.max_amount_of_keys_to_hold && k2.get_matrix()[chamber1-1][chamber2-1])
                                 {
                                     list_of_keys.push_back(k2);
                                     DEBUG("add a combination of keys");
                                 }
                                 else
                                 {
-                                    DEBUG("could not add a combination, amount of keys " << k2.get_amount_of_keys() << " transition from " << chamber1 << " to " << chamber2 << " equals " << (k2.matrix[chamber1-1][chamber2-1] ? "1" : "0"));
+                                    DEBUG("could not add a combination, amount of keys " << k2.get_amount_of_keys() << " transition from " << chamber1 << " to " << chamber2 << " equals " << (k2.get_matrix()[chamber1-1][chamber2-1] ? "1" : "0"));
                                 }
                             }
                             else
@@ -1447,7 +1447,7 @@ void skarabeusz::maze::generate_door(generator & g)
             
             for (auto & r1: v1)
             {
-                unsigned x1=r1->x,y1=r1->y,z1=r1->z;
+                unsigned x1=r1->get_x(),y1=r1->get_y(),z1=r1->get_z();
                 for (unsigned d=0; d<6; d++)
                 {
                     switch (static_cast<room::direction_type>(d))
@@ -1455,7 +1455,7 @@ void skarabeusz::maze::generate_door(generator & g)
                         case room::direction_type::NORTH:
                             if (y1 > 0)
                             {
-                                if (array_of_rooms[x1][y1-1][z1]->chamber_id==chamber2)
+                                if (array_of_rooms[x1][y1-1][z1]->get_chamber_id()==chamber2)
                                 {
                                     auto r1prime{r1};
                                     auto r2prime{array_of_rooms[x1][y1-1][z1]};
@@ -1468,7 +1468,7 @@ void skarabeusz::maze::generate_door(generator & g)
                         case room::direction_type::EAST:
                             if (x1 < max_x_range-1)
                             {
-                                if (array_of_rooms[x1+1][y1][z1]->chamber_id==chamber2)
+                                if (array_of_rooms[x1+1][y1][z1]->get_chamber_id()==chamber2)
                                 {
                                     auto r1prime{r1};
                                     auto r2prime{array_of_rooms[x1+1][y1][z1]};
@@ -1481,7 +1481,7 @@ void skarabeusz::maze::generate_door(generator & g)
                         case room::direction_type::SOUTH:
                             if (y1 < max_y_range-1)
                             {
-                                if (array_of_rooms[x1][y1+1][z1]->chamber_id==chamber2)
+                                if (array_of_rooms[x1][y1+1][z1]->get_chamber_id()==chamber2)
                                 {
                                     auto r1prime{r1};
                                     auto r2prime{array_of_rooms[x1][y1+1][z1]};
@@ -1494,7 +1494,7 @@ void skarabeusz::maze::generate_door(generator & g)
                         case room::direction_type::WEST:
                             if (x1 > 0)
                             {
-                                if (array_of_rooms[x1-1][y1][z1]->chamber_id==chamber2)
+                                if (array_of_rooms[x1-1][y1][z1]->get_chamber_id()==chamber2)
                                 {
                                     auto r1prime{r1};
                                     auto r2prime{array_of_rooms[x1-1][y1][z1]};
@@ -1507,7 +1507,7 @@ void skarabeusz::maze::generate_door(generator & g)
                         case room::direction_type::UP:
                             if (z1 < max_z_range-1)
                             {
-                                if (array_of_rooms[x1][y1][z1+1]->chamber_id==chamber2)
+                                if (array_of_rooms[x1][y1][z1+1]->get_chamber_id()==chamber2)
                                 {
                                     auto r1prime{r1};
                                     auto r2prime{array_of_rooms[x1][y1][z1+1]};
@@ -1520,7 +1520,7 @@ void skarabeusz::maze::generate_door(generator & g)
                         case room::direction_type::DOWN:
                             if (z1 > 0)
                             {
-                                if (array_of_rooms[x1][y1][z1-1]->chamber_id==chamber2)
+                                if (array_of_rooms[x1][y1][z1-1]->get_chamber_id()==chamber2)
                                 {
                                     auto r1prime{r1};
                                     auto r2prime{array_of_rooms[x1][y1][z1-1]};
@@ -1547,11 +1547,11 @@ void skarabeusz::maze::generate_door(generator & g)
                 auto &r1{temporary_vector_of_door_candidates[index].first};
                 auto &r2{temporary_vector_of_door_candidates[index].second};
 
-                r1->list_of_door.push_back(std::make_shared<door>(r1->chamber_id, r2->chamber_id, *r2, temporary_vector_of_directions[index].first));
-                r2->list_of_door.push_back(std::make_shared<door>(r2->chamber_id, r1->chamber_id, *r1, temporary_vector_of_directions[index].second));
+                r1->get_list_of_door().push_back(std::make_shared<door>(r1->get_chamber_id(), r2->get_chamber_id(), *r2, temporary_vector_of_directions[index].first));
+                r2->get_list_of_door().push_back(std::make_shared<door>(r2->get_chamber_id(), r1->get_chamber_id(), *r1, temporary_vector_of_directions[index].second));
                 
-                matrix_of_chamber_transitions[r1->chamber_id-1][r2->chamber_id-1]=true;
-                matrix_of_chamber_transitions[r2->chamber_id-1][r1->chamber_id-1]=true;
+                matrix_of_chamber_transitions[r1->get_chamber_id()-1][r2->get_chamber_id()-1]=true;
+                matrix_of_chamber_transitions[r2->get_chamber_id()-1][r1->get_chamber_id()-1]=true;
                 amount_of_keys++;
             }
         }
@@ -1849,9 +1849,9 @@ void skarabeusz::maze::choose_seed_rooms(generator & g)
         
         array_of_rooms[x][y][z]->assign_to_chamber(i, true);
         
-        vector_of_chambers[i-1]->seed.x = x;
-        vector_of_chambers[i-1]->seed.y = y;
-        vector_of_chambers[i-1]->seed.z = z;
+        vector_of_chambers[i-1]->get_seed().set_x(x);
+        vector_of_chambers[i-1]->get_seed().set_y(y);
+        vector_of_chambers[i-1]->get_seed().set_z(z);
         
         DEBUG("seed room for " << i << " is " << x << "," << y << "," << z);
     }
@@ -1905,7 +1905,7 @@ void skarabeusz::maze::create_latex()
 
 void skarabeusz::hyperlink::print(std::ostream & s) const 
 { 
-    s << "\\hyperlink{par " << my_paragraph.number << "}{" << my_paragraph.number << "}"; 
+    s << "\\hyperlink{par " << my_paragraph.get_number() << "}{" << my_paragraph.get_number() << "}"; 
 }
 
 void skarabeusz::maze::create_html()
@@ -1944,9 +1944,9 @@ unsigned skarabeusz::maze::get_x1_of_chamber(unsigned id) const
     
     get_all_rooms_of_chamber(id, temporary_vector);
     
-    std::sort(temporary_vector.begin(), temporary_vector.end(), [](auto &a, auto &b){ return a->x < b->x; });
+    std::sort(temporary_vector.begin(), temporary_vector.end(), [](auto &a, auto &b){ return a->get_x() < b->get_x(); });
     
-    return temporary_vector[0]->x;
+    return temporary_vector[0]->get_x();
 }
 
 unsigned skarabeusz::maze::get_y1_of_chamber(unsigned id) const
@@ -1955,9 +1955,9 @@ unsigned skarabeusz::maze::get_y1_of_chamber(unsigned id) const
     
     get_all_rooms_of_chamber(id, temporary_vector);
     
-    std::sort(temporary_vector.begin(), temporary_vector.end(), [](auto &a, auto &b){ return a->y < b->y; });
+    std::sort(temporary_vector.begin(), temporary_vector.end(), [](auto &a, auto &b){ return a->get_y() < b->get_y(); });
     
-    return temporary_vector[0]->y;
+    return temporary_vector[0]->get_y();
 }
 
 unsigned skarabeusz::maze::get_z1_of_chamber(unsigned id) const
@@ -1966,9 +1966,9 @@ unsigned skarabeusz::maze::get_z1_of_chamber(unsigned id) const
     
     get_all_rooms_of_chamber(id, temporary_vector);
     
-    std::sort(temporary_vector.begin(), temporary_vector.end(), [](auto &a, auto &b){ return a->z < b->z; });
+    std::sort(temporary_vector.begin(), temporary_vector.end(), [](auto &a, auto &b){ return a->get_z() < b->get_z(); });
     
-    return temporary_vector[0]->z;
+    return temporary_vector[0]->get_z();
 }
 
 unsigned skarabeusz::maze::get_x2_of_chamber(unsigned id) const
@@ -1977,9 +1977,9 @@ unsigned skarabeusz::maze::get_x2_of_chamber(unsigned id) const
     
     get_all_rooms_of_chamber(id, temporary_vector);
     
-    std::sort(temporary_vector.begin(), temporary_vector.end(), [](auto &a, auto &b){ return a->x > b->x; });
+    std::sort(temporary_vector.begin(), temporary_vector.end(), [](auto &a, auto &b){ return a->get_x() > b->get_x(); });
     
-    return temporary_vector[0]->x;
+    return temporary_vector[0]->get_x();
 
 }
 
@@ -1989,9 +1989,9 @@ unsigned skarabeusz::maze::get_y2_of_chamber(unsigned id) const
     
     get_all_rooms_of_chamber(id, temporary_vector);
     
-    std::sort(temporary_vector.begin(), temporary_vector.end(), [](auto &a, auto &b){ return a->y > b->y; });
+    std::sort(temporary_vector.begin(), temporary_vector.end(), [](auto &a, auto &b){ return a->get_y() > b->get_y(); });
     
-    return temporary_vector[0]->y;
+    return temporary_vector[0]->get_y();
 }
 
 unsigned skarabeusz::maze::get_z2_of_chamber(unsigned id) const
@@ -2000,9 +2000,9 @@ unsigned skarabeusz::maze::get_z2_of_chamber(unsigned id) const
     
     get_all_rooms_of_chamber(id, temporary_vector);
     
-    std::sort(temporary_vector.begin(), temporary_vector.end(), [](auto &a, auto &b){ return a->z > b->z; });
+    std::sort(temporary_vector.begin(), temporary_vector.end(), [](auto &a, auto &b){ return a->get_z() > b->get_z(); });
     
-    return temporary_vector[0]->z;
+    return temporary_vector[0]->get_z();
 }
 
 bool skarabeusz::maze::get_can_be_assigned_to_chamber(unsigned x1, unsigned y1, unsigned z1, unsigned x2, unsigned y2, unsigned z2, unsigned id) const
@@ -2235,14 +2235,14 @@ void skarabeusz::maze::create_maps(const map_parameters & mp)
                 if (array_of_rooms[x][y][z]->get_is_seed_room())
                 {
                     i.fill_ellipse(x*mp.room_width+mp.room_width/2,y*mp.room_height+mp.room_height/2,mp.room_width/2,mp.room_height/2, red);                    
-                    i.print_string(x*mp.room_width+mp.room_width/2-10,y*mp.room_height+mp.room_height/2-10, array_of_rooms[x][y][z]->name, black);
+                    i.print_string(x*mp.room_width+mp.room_width/2-10,y*mp.room_height+mp.room_height/2-10, array_of_rooms[x][y][z]->get_name(), black);
                     
                 }
                 
-                for (auto & d: array_of_rooms[x][y][z]->list_of_door)
+                for (auto & d: array_of_rooms[x][y][z]->get_list_of_door())
                 {
-                    i.fill_ellipse((x+d->target_room.x)*mp.room_width/2+mp.room_width/2,(y+d->target_room.y)*mp.room_height/2+mp.room_height/2, mp.room_width/2,mp.room_height/2, blue);
-                    i.print_string(x*mp.room_width+mp.room_width/2-10,y*mp.room_height+mp.room_height/2-10, array_of_rooms[x][y][z]->name, black);
+                    i.fill_ellipse((x+d->get_target_room().get_x())*mp.room_width/2+mp.room_width/2,(y+d->get_target_room().get_y())*mp.room_height/2+mp.room_height/2, mp.room_width/2,mp.room_height/2, blue);
+                    i.print_string(x*mp.room_width+mp.room_width/2-10,y*mp.room_height+mp.room_height/2-10, array_of_rooms[x][y][z]->get_name(), black);
                 }
                 
             }
