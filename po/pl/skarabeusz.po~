@@ -1,0 +1,246 @@
+# Polish translations for skarabeusz package.
+# Copyright (C) 2022 THE skarabeusz'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the skarabeusz package.
+# Pawel Biernacki <pawel.f.biernacki@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: skarabeusz 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-25 00:22+0300\n"
+"PO-Revision-Date: 2022-05-24 22:09+0300\n"
+"Last-Translator: Pawel Biernacki <pawel.f.biernacki@gmail.com>\n"
+"Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#: src/skarabeusz.cc:199
+#, c-format
+msgid "Apart from you there is a dwarf at %s here."
+msgstr "Oprócz Ciebie jest tu krasnolud na polu %s."
+
+#: src/skarabeusz.cc:843
+msgid "Congratulations! You have won!"
+msgstr "Gratulacje! Wygrałeś!"
+
+#: src/skarabeusz.cc:717
+#, c-format
+msgid "Go to the field %s - "
+msgstr "Idź na pole %s - "
+
+#: src/skarabeusz.cc:837
+msgid "Hello, my name is "
+msgstr "Witaj, mam na imię "
+
+#: src/skarabeusz.cc:857
+msgid "If you accept it go to "
+msgstr "Jeśli się zgadzasz idź do "
+
+#: src/skarabeusz.cc:754
+msgid "None of your keys opens the east door."
+msgstr "Żaden z Twich kluczy nie otwiera wschodnich drzwi."
+
+#: src/skarabeusz.cc:798
+msgid "None of your keys opens the hatch in the ceiling."
+msgstr "Żaden z Twoich kluczy nie otwiera włazu w suficie."
+
+#: src/skarabeusz.cc:787
+msgid "None of your keys opens the hatch in the floor."
+msgstr "Żaden z Twoich kluczy nie otwiera włazu w podłodze."
+
+#: src/skarabeusz.cc:743
+msgid "None of your keys opens the north door."
+msgstr "Żaden z Twoich kluczy nie otwiera północnych drzwi."
+
+#: src/skarabeusz.cc:765
+msgid "None of your keys opens the south door."
+msgstr "Żaden z Twoich kluczy nie otwiera południowych drzwi."
+
+#: src/skarabeusz.cc:776
+msgid "None of your keys opens the west door."
+msgstr "Żaden z Twoich kluczy nie otwiera zachodnich drzwi."
+
+#: src/skarabeusz.cc:691
+msgid "Talk with the dwarf - go to "
+msgstr "Porozmawiaj z krasnoludem - idź do "
+
+#: src/skarabeusz.cc:865
+msgid "The dwarf does not accept any exchange."
+msgstr "Krasnolud nie zgadza się na żadną wymianę."
+
+#: src/skarabeusz.cc:552
+msgid "The dwarf pays no attention at you."
+msgstr "Krasnolud nie zwraca na Ciebie uwagi."
+
+#: src/skarabeusz.cc:471
+#, c-format
+msgid "The dwarf says: \"I would give you the key %s for your keys.\""
+msgstr "Krasnolud mówi: \"Dam Ci klucz %s w zamian za Twoje klucze.\""
+
+#: src/skarabeusz.cc:487
+#, c-format
+msgid "The dwarf says: \"I would give you the keys %s for your keys.\""
+msgstr "Krasnolud mówi: \"Dam Ci klucze %s w zamian za Twoje klucze.\""
+
+#: src/skarabeusz.cc:288
+#, c-format
+msgid "There are %i door in the eastern wall."
+msgid_plural "There are %i door in the eastern wall."
+msgstr[0] "We wschodniej ścianie są %i drzwi."
+msgstr[1] "We wschodniej ścianie jest %i drzwi."
+msgstr[2] "We wschodniej ścianie jest %i drzwi."
+
+#: src/skarabeusz.cc:255
+#, c-format
+msgid "There are %i door in the northern wall."
+msgid_plural "There are %i door in the northern wall."
+msgstr[0] "W północnej ścianie są %i drzwi."
+msgstr[1] "W północnej ścianie jest %i drzwi."
+msgstr[2] "W północnej ścianie jest %i drzwi."
+
+#: src/skarabeusz.cc:321
+#, c-format
+msgid "There are %i door in the southern wall."
+msgid_plural "There are %i door in the southern wall."
+msgstr[0] "W południowej ścianie są %i drzwi."
+msgstr[1] "W południowej ścianie jest %i drzwi."
+msgstr[2] "W południowej ścianie jest %i drzwi."
+
+#: src/skarabeusz.cc:353
+#, c-format
+msgid "There are %i door in the western wall."
+msgid_plural "There are %i door in the western wall."
+msgstr[0] "W zachodniej ścianie są %i drzwi."
+msgstr[1] "W zachodniej ścianie jest %i drzwi."
+msgstr[2] "W zachodniej ścianie jest %i drzwi."
+
+#: src/skarabeusz.cc:388
+#, c-format
+msgid "There is %i hatch in the ceiling."
+msgid_plural "There are %i hatches in the ceiling."
+msgstr[0] "W suficie jest %i właz."
+msgstr[1] "W suficie są %i włazy."
+msgstr[2] "W suficie jest %i włazów."
+
+#: src/skarabeusz.cc:427
+#, c-format
+msgid "There is %i hatch in the floor."
+msgid_plural "There are %i hatches in the floor."
+msgstr[0] "W podłodze jest %i właz."
+msgstr[1] "W podłodze jest %i włazy."
+msgstr[2] "W podłodze jest %i włazów."
+
+#: src/skarabeusz.cc:282
+#, c-format
+msgid "There is a door %s in the eastern wall."
+msgstr "We wschodniej ścianie są drzwi %s."
+
+#: src/skarabeusz.cc:249
+#, c-format
+msgid "There is a door %s in the northern wall."
+msgstr "W północnej ścianie są drzwi %s."
+
+#: src/skarabeusz.cc:315
+#, c-format
+msgid "There is a door %s in the southern wall."
+msgstr "W południowej ścianie są drzwi %s."
+
+#: src/skarabeusz.cc:347
+#, c-format
+msgid "There is a door %s in the western wall."
+msgstr "W zachodniej ścianie są drzwi %s."
+
+#: src/skarabeusz.cc:382
+#, c-format
+msgid "There is a hatch %s in the ceiling."
+msgstr "W suficie jest właz %s."
+
+#: src/skarabeusz.cc:421
+#, c-format
+msgid "There is a hatch %s in the floor."
+msgstr "W podłodze jest właz %s."
+
+#: src/skarabeusz.cc:690
+msgid "What do you want to do?"
+msgstr "Co chcesz zrobić?"
+
+#: src/skarabeusz.cc:159
+msgid "You are standing in a corridor leading from east to west."
+msgstr "Stoisz w korytarzu prowadzącym ze wschodu na zachód."
+
+#: src/skarabeusz.cc:154
+msgid "You are standing in a corridor leading from north to south."
+msgstr "Stoisz w korytarzu prowadzącym z północy na południe."
+
+#: src/skarabeusz.cc:181
+msgid "You are standing in a large room."
+msgstr "Stoisz w dużej komnacie."
+
+#: src/skarabeusz.cc:177
+msgid "You are standing in a large square room."
+msgstr "Stoisz w dużej kwadratowej komnacie."
+
+#: src/skarabeusz.cc:149 src/skarabeusz.cc:170
+msgid "You are standing in a small room."
+msgstr "Stoisz w małej komnacie."
+
+#: src/skarabeusz.cc:166
+msgid "You are standing in a small square room."
+msgstr "Stoisz w małej kwadratowej komnacie."
+
+#: src/skarabeusz.cc:723
+#, c-format
+msgid "You are standing in front of the door at %s - "
+msgstr "Stoisz przed drzwiami na %s."
+
+#: src/skarabeusz.cc:830
+#, fuzzy, c-format
+msgid "You are standing next to the dwarf at %s."
+msgstr "Rozmawiasz z krasnoludem w %s."
+
+#: src/skarabeusz.cc:562
+#, c-format
+msgid "You are talking with the dwarf at %s."
+msgstr "Rozmawiasz z krasnoludem w %s."
+
+#: src/skarabeusz.cc:793
+msgid "You can ascend to the upper level "
+msgstr "Możesz wejść na wyższy poziom "
+
+#: src/skarabeusz.cc:782
+msgid "You can descend to the lower level "
+msgstr "Możesz zejść na niższy poziom "
+
+#: src/skarabeusz.cc:805 src/skarabeusz.cc:869
+msgid "You can look around "
+msgstr "Możesz się rozejrzeć "
+
+#: src/skarabeusz.cc:749
+msgid "You can open the door and go east "
+msgstr "Możesz otworzyć drzwi i iść na wschód "
+
+#: src/skarabeusz.cc:738
+msgid "You can open the door and go north "
+msgstr "Możesz otworzyć drzwi i iść na północ "
+
+#: src/skarabeusz.cc:760
+msgid "You can open the door and go south "
+msgstr "Możesz otworzyć drzwi i iść na południe "
+
+#: src/skarabeusz.cc:771
+msgid "You can open the door and go west "
+msgstr "Możesz otworzyć drzwi i iść na zachód "
+
+#: src/skarabeusz.cc:515
+#, c-format
+msgid "You have the key %s."
+msgstr "Masz przy sobie klucz %s."
+
+#: src/skarabeusz.cc:531
+#, c-format
+msgid "You have the keys %s."
+msgstr "Masz przy sobie klucze %s."

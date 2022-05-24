@@ -5,6 +5,7 @@ AC_PREREQ([2.69])
 AC_INIT([skarabeusz], [0.0.0], [pawel.f.biernacki@gmail.com])
 AM_INIT_AUTOMAKE()
 AC_CONFIG_HEADERS([config.h])
+AM_GNU_GETTEXT([external])
 
 # Checks for programs.
 AC_PROG_CXX
@@ -23,7 +24,7 @@ PKG_INSTALLDIR
 PKG_CHECK_MODULES([GD], [gdlib >= 2.2.5])
 
 
-AC_CONFIG_FILES([Makefile
+AC_CONFIG_FILES([Makefile po/Makefile.in
                  example/Makefile
                  inc/Makefile
                  src/Makefile])

@@ -1,9 +1,14 @@
-
 #include "skarabeusz.h" 
+#include "config.h"
+#include <libintl.h>
+#include <locale.h>
 #include <cstring>
 #include <sstream>
 #include <algorithm>
 #include <fstream>
+
+#define _(STRING) gettext(STRING)
+#define SKARABEUSZ_MAX_MESSAGE_BUFFER 1000
 
 #define SKARABEUSZ_DEBUG
 
@@ -131,7 +136,6 @@ void skarabeusz::paragraph::print(std::ostream & s) const
 std::string skarabeusz::chamber::get_description(const maze & m) const
 {
     std::stringstream result;
-    std::string what = "";
     unsigned x1,y1,z1,x2,y2,z2;
     x1 = m.get_x1_of_chamber(id);
     y1 = m.get_y1_of_chamber(id);
@@ -142,59 +146,58 @@ std::string skarabeusz::chamber::get_description(const maze & m) const
     
     if (x2-x1==1 && y2-y1==1)
     {
-        result << "Stoisz w małej komnacie.";
-        what = "komnacie";
+        result << _("You are standing in a small room.");
     }
     else
     if (x2-x1==0)
     {
-        result << "Stoisz w korytarzu prowadzącym z północy na południe.";
-        what = "korytarzu";
+        result << _("You are standing in a corridor leading from north to south.");
     }
     else
     if (y2-y1==0)
     {
-        result << "Stoisz w korytarzu prowadzącym ze wschodu na zachód.";
-        what = "korytarzu";
+        result << _("You are standing in a corridor leading from east to west.");
     }
     else
     if (x2-x1<=3 && y2-y1<=3)
     {
         if (x2-x1==y2-y1)
         {
-            result << "Stoisz w niewielkiej kwadratowej komnacie.";
+            result << _("You are standing in a small square room.");
         }
         else
         {
-            result << "Stoisz w niewielkiej komnacie.";
+            result << _("You are standing in a small room.");
         }
-        what = "komnacie";
     }
     else
     {
         if (x2-x1==y2-y1)
         {
-            result << "Stoisz w dużej kwadratowej komnacie.";            
+            result << _("You are standing in a large square room.");            
         }
         else
         {
-            result << "Stoisz w dużej komnacie.";
+            result << _("You are standing in a large room.");
         }
-        what = "komnacie";
     }
     
-    result << " Oprócz Ciebie w " << what << " jest jeszcze krasnolud na polu ";
-    
+    std::string where;
+        
     for (unsigned x=x1; x<=x2; x++)
     {
         for (unsigned y=y1; y<=y2; y++)
         {
             if (m.array_of_rooms[x][y][z1]->get_is_seed_room())
             {
-                result << m.array_of_rooms[x][y][z1]->get_name() << ". ";
+                where = m.array_of_rooms[x][y][z1]->get_name();
             }
         }
     }
+    
+    char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+    snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("Apart from you there is a dwarf at %s here."), where.c_str());
+    result << buffer;
     
     result << m.get_wall_description(id, room::direction_type::NORTH)
             << m.get_wall_description(id, room::direction_type::EAST)
@@ -242,11 +245,16 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
             
             if (amount == 1)
             {
-                result << "W północnej ścianie są drzwi " << name << ". ";
+                char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("There is a door %s in the northern wall."), name.c_str());
+                result << buffer;
             }
             else
-            {
-                result << "W północnej ścianie są " << amount << " pary drzwi. Są to ";
+            {                                
+                char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, ngettext("There are %i door in the northern wall.", "There are %i door in the northern wall.", amount), amount);
+                result << buffer;
+                                                
                 for (unsigned x=x1;x<=x2; x++)
                 {
                     if (array_of_rooms[x][y1][z1]->get_has_door_leading(room::direction_type::NORTH))
@@ -269,10 +277,17 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
             if (amount==0) return "";            
             
             if (amount == 1)
-                result << "We wschodniej ścianie są drzwi " << name << ". ";
+            {
+                char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("There is a door %s in the eastern wall."), name.c_str());
+                result << buffer;
+            }
             else
             {
-                result << "We wschodniej ścianie są " << amount << " pary drzwi. Są to ";
+                char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, ngettext("There are %i door in the eastern wall.", "There are %i door in the eastern wall.", amount), amount);
+                result << buffer;
+                
                 for (unsigned y=y1;y<=y2; y++)
                 {
                     if (array_of_rooms[x2][y][z1]->get_has_door_leading(room::direction_type::EAST))
@@ -295,10 +310,16 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
             if (amount==0) return "";
             
             if (amount == 1)
-                result << "W południowej ścianie są drzwi " << name << ". ";
+            {
+                char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("There is a door %s in the southern wall."), name.c_str());
+                result << buffer;                
+            }
             else
             {
-                result << "W południowej ścianie są " << amount << " pary drzwi. Są to ";
+                char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, ngettext("There are %i door in the southern wall.", "There are %i door in the southern wall.", amount), amount);
+                result << buffer;
                 for (unsigned x=x1;x<=x2; x++)
                 {
                     if (array_of_rooms[x][y2][z1]->get_has_door_leading(room::direction_type::SOUTH))
@@ -321,10 +342,16 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
             if (amount==0) return "";            
             
             if (amount == 1)
-                result << "W zachodniej ścianie są drzwi " << name << ". ";
+            {
+                char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("There is a door %s in the western wall."), name.c_str());
+                result << buffer;                
+            }
             else
             {
-                result << "W zachodniej ścianie są " << amount << " pary drzwi. ";
+                char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, ngettext("There are %i door in the western wall.", "There are %i door in the western wall.", amount), amount);
+                result << buffer;
                 for (unsigned y=y1;y<=y2; y++)
                 {
                     if (array_of_rooms[x1][y][z1]->get_has_door_leading(room::direction_type::WEST))
@@ -350,10 +377,17 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
             if (amount==0) return "";            
             
             if (amount == 1)
-                result << "W suficie jest właz " << name << ". ";
+            {
+                char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("There is a hatch %s in the ceiling."), name.c_str());
+                result << buffer;                
+            }
             else
             {
-                result << "W suficie jest " << amount << " włazów. ";
+                char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, ngettext("There is %i hatch in the ceiling.", "There are %i hatches in the ceiling.", amount), amount);
+                result << buffer;
+                
                 for (unsigned x=x1;x<=x2; x++)
                 {
                     for (unsigned y=y1;y<=y2; y++)
@@ -382,10 +416,17 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
             if (amount==0) return "";            
             
             if (amount == 1)
-                result << "W podłodze jest właz " << name << ". ";
+            {
+                char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("There is a hatch %s in the floor."), name.c_str());
+                result << buffer;                
+            }
             else
             {
-                result << "W podłodze jest " << amount << " włazów. ";
+                char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, ngettext("There is %i hatch in the floor.", "There are %i hatches in the floor.", amount), amount);
+                result << buffer;
+                
                 for (unsigned x=x1;x<=x2; x++)
                 {
                     for (unsigned y=y1;y<=y2; y++)
@@ -407,6 +448,7 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
 
 std::string skarabeusz::maze::get_keys_description_after_exchange(const keys & k) const
 {
+    std::stringstream result;
     std::stringstream s;
     
     unsigned amount=0;
@@ -423,14 +465,15 @@ std::string skarabeusz::maze::get_keys_description_after_exchange(const keys & k
     
     if (amount == 1)
     {
-        s << "Krasnolud mówi - \"Chętnie dam Ci klucz " << t << " w zamian za Twoje klucze.\" ";
+        s << t;
+        
+        char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("The dwarf says: \"I would give you the key %s for your keys.\""), s.str().c_str());
+        result << buffer;
     }
     else
     {
         number=0;
-        
-        s << "Krasnolud mówi - \"Chętnie dam Ci klucze ";
-        
         for (unsigned i=0; i<amount_of_chambers; i++)
         {
             for (unsigned j=i+1; j<amount_of_chambers; j++)
@@ -439,14 +482,18 @@ std::string skarabeusz::maze::get_keys_description_after_exchange(const keys & k
                 number++;
             }
         }
-        s << " w zamian za Twoje klucze.\" ";
+
+        char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("The dwarf says: \"I would give you the keys %s for your keys.\""), s.str().c_str());
+        result << buffer;
     }
     
-    return s.str();
+    return result.str();
 }
 
 std::string skarabeusz::maze::get_keys_description(const keys & k) const
 {
+    std::stringstream result;
     std::stringstream s;
     unsigned amount=0;
     unsigned number=0,t;
@@ -463,11 +510,13 @@ std::string skarabeusz::maze::get_keys_description(const keys & k) const
     
     if (amount == 1)
     {
-        s << "Masz przy sobie klucz numer " << t << ".";
+        s << t;
+        char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You have the key %s."), s.str().c_str());
+        result << buffer;
     }
     else
     {
-        s << "Masz przy sobie klucze o numerach: ";
         number=0;
         
         for (unsigned i=0; i<amount_of_chambers; i++)
@@ -478,9 +527,11 @@ std::string skarabeusz::maze::get_keys_description(const keys & k) const
                 number++;
             }
         }
-        s << ". ";
+        char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You have the keys %s."), s.str().c_str());
+        result << buffer;
     }
-    return s.str();
+    return result.str();
 }
 
 std::string skarabeusz::virtual_door::get_description(const maze & m, std::list<std::vector<std::vector<bool>>>::const_iterator x) const
@@ -494,11 +545,11 @@ std::string skarabeusz::virtual_door::get_description(const maze & m, std::list<
 
 std::string skarabeusz::collection_of_virtual_door::get_description(const maze & m) const
 {
-    std::stringstream s;
+    std::stringstream result;
     unsigned chamber_id;
     if (list_of_virtual_door.begin() == list_of_virtual_door.end())
     {
-        s << "Krasnolud nie zwraca na Ciebie uwagi.\n";
+        result << _("The dwarf pays no attention at you.");
     }
     else
     {
@@ -506,12 +557,13 @@ std::string skarabeusz::collection_of_virtual_door::get_description(const maze &
         
         DEBUG("collection_of_virtual_door::get_description chamber_id = " << chamber_id);
         DEBUG("x,y,z = " << m.vector_of_chambers[chamber_id]->get_seed().x << "," << m.vector_of_chambers[chamber_id]->get_seed().y << "," << m.vector_of_chambers[chamber_id]->get_seed().z);
-        
-        s << "Rozmawiasz z krasnoludem na polu " 
-        << m.array_of_rooms[m.vector_of_chambers[chamber_id]->get_seed().x][m.vector_of_chambers[chamber_id]->get_seed().y][m.vector_of_chambers[chamber_id]->get_seed().z]->get_name() << ". ";                
+
+        char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You are talking with the dwarf at %s."), m.array_of_rooms[m.vector_of_chambers[chamber_id]->get_seed().x][m.vector_of_chambers[chamber_id]->get_seed().y][m.vector_of_chambers[chamber_id]->get_seed().z]->get_name().c_str());
+        result << buffer;        
     }
     
-    return s.str();
+    return result.str();
 }
 
 bool skarabeusz::room::get_door_can_be_opened_with(direction_type d, const keys & k) const
@@ -635,8 +687,8 @@ void skarabeusz::generator::generate_paragraphs()
     {
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.get_keys_description(target.vector_of_paragraphs[i]->get_state().get_keys())));
                 
-        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Co chcesz zrobić? "));
-        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Porozmawiać z krasnoludem - idź do "));
+        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(_("What do you want to do?")));
+        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(_("Talk with the dwarf - go to ")));
         target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[i+amount_of_chamber_descriptions]));
         
         unsigned x1,x2,y1,y2,z1,z2;
@@ -660,13 +712,18 @@ void skarabeusz::generator::generate_paragraphs()
                 {
                     if (target.array_of_rooms[x][y][z]->get_list_of_door().size()>0)
                     {                        
-                        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Iść na pole "));
-                        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.array_of_rooms[x][y][z]->get_name()));                        
+                        
+                        char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+                        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("Go to the field %s - "), target.array_of_rooms[x][y][z]->get_name().c_str());
+                        
+                        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(buffer));                        
                         target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[number]));
                         
-                        target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Stoisz przed drzwiami na polu "));
-                        target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(target.array_of_rooms[x][y][z]->get_name()));
-                        target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(". "));                        
+                        
+                        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You are standing in front of the door at %s - "), target.array_of_rooms[x][y][z]->get_name().c_str());
+
+                        target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                        
+                        
                         target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(target.get_keys_description(target.vector_of_paragraphs[i]->get_state().get_keys())));
 
                         for (unsigned d=0; d<6; d++)
@@ -680,74 +737,74 @@ void skarabeusz::generator::generate_paragraphs()
                                         
                                         if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz iść na północ "));                                                                                    
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can open the door and go north ")));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y-1,z,k, paragraph::paragraph_type::DOOR)]));
                                         }
                                         else
                                         {
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Żaden z Twoich kluczy nie pasuje do północnych drzwi. "));
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("None of your keys opens the north door.")));
                                         }
                                         break;
                                     case room::direction_type::EAST:
                                         if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz iść na wschód "));
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can open the door and go east ")));
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x+1,y,z,k, paragraph::paragraph_type::DOOR)]));
                                         }
                                         else
                                         {
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Żaden z Twoich kluczy nie pasuje do wschodnich drzwi. "));
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("None of your keys opens the east door.")));
                                         }
                                         break;
                                     case room::direction_type::SOUTH:
                                         if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz iść na południe "));
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can open the door and go south ")));
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y+1,z,k, paragraph::paragraph_type::DOOR)]));                                            
                                         }
                                         else
                                         {
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Żaden z Twoich kluczy nie pasuje do południowych drzwi. "));
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("None of your keys opens the south door.")));
                                         }
                                         break;
                                     case room::direction_type::WEST:
                                         if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz iść na zachód "));
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can open the door and go west ")));
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x-1,y,z,k, paragraph::paragraph_type::DOOR)]));
                                         }
                                         else
                                         {
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Żaden z Twoich kluczy nie pasuje do zachodnich drzwi. "));
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("None of your keys opens the west door.")));
                                         }                                            
                                         break;
                                     case room::direction_type::DOWN:
                                         if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz zejść na niższy poziom "));
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can descend to the lower level ")));
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y,z-1,k, paragraph::paragraph_type::DOOR)]));
                                         }
                                         else
                                         {
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Żaden z Twoich kluczy nie pasuje do klapy w podłodze. "));
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("None of your keys opens the hatch in the floor.")));
                                         }
                                         break;
                                     case room::direction_type::UP:
                                         if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz wejść na wyższy poziom "));
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can ascend to the upper level ")));
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y,z+1,k, paragraph::paragraph_type::DOOR)]));
                                         }
                                         else
                                         {
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Żaden z Twoich kluczy nie pasuje do klapy w suficie. "));
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("None of your keys opens the hatch in the ceiling.")));
                                         }
                                         break;                                        
                                 }
                             }
                         }
                         
-                        target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>("Możesz się rozejrzeć "));
+                        target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can look around ")));
                         target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[number]->get_state().get_chamber_id(),target.vector_of_paragraphs[number]->get_state().get_keys(), paragraph::paragraph_type::CHAMBER_DESCRIPTION)]));
                                                 
                         number++;                        
@@ -769,23 +826,23 @@ void skarabeusz::generator::generate_paragraphs()
                      target.vector_of_virtual_door[target.vector_of_paragraphs[i]->get_state().get_chamber_id()].get_list_of_virtual_door().end(),
                      [&k](auto & x){return x.get_contains(k.get_matrix());});
         
+
+
+        char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You are standing next to the dwarf at %s."), target.array_of_rooms[target.vector_of_chambers[chamber_id-1]->get_seed().x][target.vector_of_chambers[chamber_id-1]->get_seed().y][target.vector_of_chambers[chamber_id-1]->get_seed().z]->get_name().c_str());
         
-        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Stoisz obok krasnoluda na polu "));
-        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.array_of_rooms[target.vector_of_chambers[chamber_id-1]->get_seed().x][target.vector_of_chambers[chamber_id-1]->get_seed().y][target.vector_of_chambers[chamber_id-1]->get_seed().z]->get_name()));
-        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(". "));                        
-        
-        
+        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(buffer));
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.get_keys_description(target.vector_of_paragraphs[i]->get_state().get_keys())));
         
         bool exchange = false;
         
-        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Witaj, nazywam się "));
+        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(_("Hello, my name is ")));
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(target.vector_of_chambers[chamber_id-1]->get_guardian_name()));
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(". "));
         
         if (target.vector_of_paragraphs[i]->get_ending())
         {
-            target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Gratulacje! Udało Ci się!"));
+            target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(_("Congratulations! You have won!")));
         }        
         else
         {
@@ -799,7 +856,7 @@ void skarabeusz::generator::generate_paragraphs()
                         std::string t = it->get_description(target, x);                
                         exchange=true;
                         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(t));
-                        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Jeżeli się zgadzasz przejdź do "));                                        
+                        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(_("If you accept it go to ")));                                        
                         target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[i]->get_state().get_chamber_id(), k2, paragraph::paragraph_type::DISCUSSION)]));
                         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(". "));
                     }
@@ -807,11 +864,11 @@ void skarabeusz::generator::generate_paragraphs()
             }
             if (!exchange)
             {
-                target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Krasnolud nie zgadza się na żadną wymianę. "));            
+                target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(_("The dwarf does not accept any exchange.")));            
             }
         }
 
-        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>("Możesz się rozejrzeć "));
+        target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(_("You can look around ")));
         target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[i]->get_state().get_chamber_id(),target.vector_of_paragraphs[i]->get_state().get_keys(), paragraph::paragraph_type::CHAMBER_DESCRIPTION)]));        
     }
     
@@ -1885,9 +1942,12 @@ void skarabeusz::maze::create_latex()
     
     for (unsigned z=0; z<max_z_range; z++)
     {        
+        char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("This is a map of the level %i."), z+1);
+        
         file_stream
         << "\\newpage\n"
-        << "To jest mapa poziomu " << (z+1) << "-go:\\\\\n"
+        << buffer << "\\\\\n"
         << "\\includegraphics[width=16cm,height=12cm]{map_" << z << ".png}\\\\\n";
     }
 
@@ -2266,6 +2326,11 @@ void skarabeusz::maze::create_maps(const map_parameters & mp)
 
 int main(int argc, char * argv[])
 {
+    
+    setlocale (LC_ALL, "");
+    bindtextdomain (PACKAGE, LOCALEDIR);
+    textdomain(PACKAGE);    
+    
     unsigned x_range=10,y_range=7,z_range=1,amount_of_chambers=5,max_amount_of_keys_to_hold=2,amount_of_alternative_endings=1;
     
     for (unsigned i=1; i<argc; i++)
