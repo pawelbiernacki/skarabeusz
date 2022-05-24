@@ -2266,7 +2266,7 @@ void skarabeusz::maze::create_maps(const map_parameters & mp)
 
 int main(int argc, char * argv[])
 {
-    unsigned x_range=15,y_range=10,z_range=1,amount_of_chambers=5,max_amount_of_keys_to_hold=2,amount_of_alternative_endings=1;
+    unsigned x_range=10,y_range=7,z_range=1,amount_of_chambers=5,max_amount_of_keys_to_hold=2,amount_of_alternative_endings=1;
     
     for (unsigned i=1; i<argc; i++)
     {
