@@ -86,6 +86,36 @@ const std::string skarabeusz::generator::names[]=
     "Glorimaic Bloodbende"
 };
 
+const std::string skarabeusz::generator::with_the_x_key_names[]=
+{
+    gettext_noop("with the red key"),
+    gettext_noop("with the white key"),
+    gettext_noop("with the black key"),
+    gettext_noop("with the yellow key"),
+    gettext_noop("with the green key"),
+    gettext_noop("with the blue key"),
+    gettext_noop("with the purple key"),
+    gettext_noop("with the diamond key"),
+    gettext_noop("with the silver key"),
+    gettext_noop("with the golden key"),
+    gettext_noop("with the orange key"),
+    gettext_noop("with the brown key"),
+    gettext_noop("with the gray key"),
+    gettext_noop("with the olive key"),
+    gettext_noop("with the maroon key"),
+    gettext_noop("with the violet key"),
+    gettext_noop("with the magenta key"),
+    gettext_noop("with the cream key"),
+    gettext_noop("with the coral key"),
+    gettext_noop("with the burgundy key"),
+    gettext_noop("with the peach key"),
+    gettext_noop("with the rust key"),
+    gettext_noop("with the pink key"),
+    gettext_noop("with the cyan key"),
+    gettext_noop("with the scarlet key")
+};
+
+
 const std::string skarabeusz::generator::key_names[]=
 {
     gettext_noop("red"),
@@ -116,16 +146,20 @@ const std::string skarabeusz::generator::key_names[]=
 };
 
 
-std::string skarabeusz::generator::get_random_key_name()
+void skarabeusz::generator::get_random_key_name(std::string & normal_form, std::string & with_the_key_form)
 {
-    std::vector<std::string> temporary_vector_of_names;
+    std::vector<std::string> temporary_vector_of_names, temporary_vector_of_with_the_key_forms;
     
+    
+    unsigned i=0;
     for (auto x:key_names)
     {
         if (map_name_to_taken_flag.find(x)==map_name_to_taken_flag.end())
         {
             temporary_vector_of_names.push_back(x);
+            temporary_vector_of_with_the_key_forms.push_back(with_the_x_key_names[i]);
         }
+        i++;
     }
     if (temporary_vector_of_names.size()==0)
     {
@@ -140,7 +174,8 @@ std::string skarabeusz::generator::get_random_key_name()
         throw std::runtime_error("failed to insert key name");
     }
     
-	return temporary_vector_of_names[index];
+	normal_form = temporary_vector_of_names[index];
+    with_the_key_form = temporary_vector_of_with_the_key_forms[index];
 }
 
 std::string skarabeusz::generator::get_random_name()
@@ -687,6 +722,18 @@ unsigned skarabeusz::maze::get_paragraph_index(unsigned chamber_id, const keys &
     throw std::runtime_error("internal error");    
 }
 
+std::string skarabeusz::room::which_key_can_open(direction_type d) const
+{
+    for (auto &a: list_of_door)
+    {
+        if (a->get_direction() == d)
+        {
+            return a->get_door_object().get_with_the_key_name();
+        }
+    }
+    return "";  // this should never happen
+}
+
 
 void skarabeusz::generator::generate_paragraphs()
 {
@@ -821,7 +868,8 @@ void skarabeusz::generator::generate_paragraphs()
                                         
                                         if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can open the door and go north ")));                                                                                    
+                                            snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You can open the door %s and go north "), _(target.array_of_rooms[x][y][z]->which_key_can_open(di).c_str()));                                            
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y-1,z,k, paragraph::paragraph_type::DOOR)]));
                                         }
                                         else
@@ -832,7 +880,8 @@ void skarabeusz::generator::generate_paragraphs()
                                     case room::direction_type::EAST:
                                         if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can open the door and go east ")));
+                                            snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You can open the door %s and go east "), _(target.array_of_rooms[x][y][z]->which_key_can_open(di).c_str()));                                            
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x+1,y,z,k, paragraph::paragraph_type::DOOR)]));
                                         }
                                         else
@@ -843,7 +892,8 @@ void skarabeusz::generator::generate_paragraphs()
                                     case room::direction_type::SOUTH:
                                         if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can open the door and go south ")));
+                                            snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You can open the door %s and go south "), _(target.array_of_rooms[x][y][z]->which_key_can_open(di).c_str()));                                            
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y+1,z,k, paragraph::paragraph_type::DOOR)]));                                            
                                         }
                                         else
@@ -854,7 +904,8 @@ void skarabeusz::generator::generate_paragraphs()
                                     case room::direction_type::WEST:
                                         if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can open the door and go west ")));
+                                            snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You can open the door %s and go west "), _(target.array_of_rooms[x][y][z]->which_key_can_open(di).c_str()));                                            
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x-1,y,z,k, paragraph::paragraph_type::DOOR)]));
                                         }
                                         else
@@ -865,7 +916,8 @@ void skarabeusz::generator::generate_paragraphs()
                                     case room::direction_type::DOWN:
                                         if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can descend to the lower level ")));
+                                            snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You can open the hatch %s and descend to the lower level "), _(target.array_of_rooms[x][y][z]->which_key_can_open(di).c_str()));                                            
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y,z-1,k, paragraph::paragraph_type::DOOR)]));
                                         }
                                         else
@@ -876,7 +928,8 @@ void skarabeusz::generator::generate_paragraphs()
                                     case room::direction_type::UP:
                                         if (target.array_of_rooms[x][y][z]->get_door_can_be_opened_with(di, target.vector_of_paragraphs[number]->get_state().get_keys()))
                                         {                                        
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can ascend to the upper level ")));
+                                            snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You can open the hatch %s and ascend to the upper level "), _(target.array_of_rooms[x][y][z]->which_key_can_open(di).c_str()));                                            
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y,z+1,k, paragraph::paragraph_type::DOOR)]));
                                         }
                                         else
@@ -1690,7 +1743,10 @@ void skarabeusz::maze::generate_door(generator & g)
                 auto &r1{temporary_vector_of_door_candidates[index].first};
                 auto &r2{temporary_vector_of_door_candidates[index].second};
 
-                std::unique_ptr<door_object> dx=std::make_unique<door_object>(r1->get_chamber_id(), r2->get_chamber_id(), ++amount_of_keys, _(g.get_random_key_name().c_str()));
+                std::string normal_form, with_the_key_form;
+                g.get_random_key_name(normal_form, with_the_key_form);
+                
+                std::unique_ptr<door_object> dx=std::make_unique<door_object>(r1->get_chamber_id(), r2->get_chamber_id(), ++amount_of_keys, _(normal_form.c_str()), _(with_the_key_form.c_str()));
                 
                 r1->get_list_of_door().push_back(std::make_shared<door>(r1->get_chamber_id(), r2->get_chamber_id(), *r2, temporary_vector_of_directions[index].first, *dx));
                 r2->get_list_of_door().push_back(std::make_shared<door>(r2->get_chamber_id(), r1->get_chamber_id(), *r1, temporary_vector_of_directions[index].second, *dx));

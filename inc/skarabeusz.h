@@ -176,6 +176,8 @@ namespace skarabeusz
         
         bool get_door_can_be_opened_with(direction_type d, const keys & k) const;
         
+        std::string which_key_can_open(direction_type d) const;
+        
         unsigned get_x() const { return x; }
         unsigned get_y() const { return y; }
         unsigned get_z() const { return z; }
@@ -188,13 +190,17 @@ namespace skarabeusz
     private:
         unsigned chamber1,chamber2;
         unsigned key_number;    // begins with 1
-        const std::string key_name;
+        const std::string key_name, with_the_key_name;
     public:
-        door_object(unsigned c1, unsigned c2, unsigned kn, const std::string & k): chamber1{c1}, chamber2{c2}, key_number{kn}, key_name{k} {}
+        door_object(unsigned c1, unsigned c2, unsigned kn, const std::string & k, const std::string & wtk): 
+            chamber1{c1}, chamber2{c2}, key_number{kn}, 
+            key_name{k}, with_the_key_name{wtk} {}
         
         bool get_connects(unsigned c1, unsigned c2) const { return (chamber1==c1 && chamber2==c2) || (chamber1==c2 && chamber2==c1); }
         
         const std::string & get_key_name() const { return key_name; }
+        
+        const std::string & get_with_the_key_name() const { return with_the_key_name; }
     };
     
 
@@ -217,6 +223,8 @@ namespace skarabeusz
         
         unsigned get_chamber1() const { return chamber1; }
         unsigned get_chamber2() const { return chamber2; }
+        
+        door_object & get_door_object() { return my_object; }
     };
     
     class chamber
@@ -493,7 +501,8 @@ namespace skarabeusz
 
         static const std::string names[];
         static const std::string key_names[];
-        
+        static const std::string with_the_x_key_names[];
+
         std::map<std::string, bool> map_name_to_taken_flag;
         
         void generate_list_of_keys();
@@ -526,7 +535,7 @@ namespace skarabeusz
         void run();
         
         void get_random_room(unsigned & x, unsigned & y, unsigned & z);
-        std::string get_random_key_name();
+        void get_random_key_name(std::string & normal_form, std::string & with_the_key_form);
         
         std::mt19937 & get_random_number_generator() { return gen; }
                 
