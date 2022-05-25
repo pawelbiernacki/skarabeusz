@@ -182,6 +182,21 @@ namespace skarabeusz
         const std::string get_name() const { return name; }
         std::list<std::shared_ptr<door>> & get_list_of_door() { return list_of_door; }
     };
+    
+    class door_object
+    {
+    private:
+        unsigned chamber1,chamber2;
+        unsigned key_number;    // begins with 1
+        const std::string key_name;
+    public:
+        door_object(unsigned c1, unsigned c2, unsigned kn, const std::string & k): chamber1{c1}, chamber2{c2}, key_number{kn}, key_name{k} {}
+        
+        bool get_connects(unsigned c1, unsigned c2) const { return (chamber1==c1 && chamber2==c2) || (chamber1==c2 && chamber2==c1); }
+        
+        const std::string & get_key_name() const { return key_name; }
+    };
+    
 
     class door
     {
@@ -190,8 +205,11 @@ namespace skarabeusz
         unsigned chamber1,chamber2;
         room::direction_type direction;
         
+        door_object & my_object;
+        
     public:
-        door(unsigned c1, unsigned c2, room & r, room::direction_type d): chamber1{c1}, chamber2{c2}, target_room{r}, direction{d} {}
+        door(unsigned c1, unsigned c2, room & r, room::direction_type d, door_object & o): 
+            chamber1{c1}, chamber2{c2}, target_room{r}, direction{d}, my_object{o} {}
         
         room::direction_type get_direction() const { return direction; }
         
@@ -380,6 +398,8 @@ namespace skarabeusz
 
         std::vector<std::unique_ptr<paragraph>> vector_of_paragraphs;
         
+        std::vector<std::unique_ptr<door_object>> vector_of_door_objects;
+        
         
     public:
         maze(): amount_of_keys{0} {}
@@ -443,7 +463,9 @@ namespace skarabeusz
         
         unsigned get_paragraph_index(unsigned chamber_id, const keys & k, paragraph::paragraph_type t) const;
         
+        door_object & get_door_object(unsigned chamber1, unsigned chamber2);
         
+        const door_object & get_door_object(unsigned chamber1, unsigned chamber2) const;
     };
     
     class generator
@@ -470,6 +492,7 @@ namespace skarabeusz
 		std::vector<std::list<std::list<keys>>> vector_of_equivalence_classes;
 
         static const std::string names[];
+        static const std::string key_names[];
         
         std::map<std::string, bool> map_name_to_taken_flag;
         
@@ -503,6 +526,7 @@ namespace skarabeusz
         void run();
         
         void get_random_room(unsigned & x, unsigned & y, unsigned & z);
+        std::string get_random_key_name();
         
         std::mt19937 & get_random_number_generator() { return gen; }
                 

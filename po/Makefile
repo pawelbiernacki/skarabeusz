@@ -64,10 +64,10 @@ MSGINIT = msginit
 MSGCONV = msgconv
 MSGFILTER = msgfilter
 
-POFILES =  en.po pl.po
-GMOFILES =  en.gmo pl.gmo
-UPDATEPOFILES =  en.po-update pl.po-update
-DUMMYPOFILES =  en.nop pl.nop
+POFILES =  pl.po
+GMOFILES =  pl.gmo
+UPDATEPOFILES =  pl.po-update
+DUMMYPOFILES =  pl.nop
 DISTFILES.common = Makefile.in.in remove-potcdate.sin \
 $(DISTFILES.common.extra1) $(DISTFILES.common.extra2) $(DISTFILES.common.extra3)
 DISTFILES = $(DISTFILES.common) Makevars POTFILES.in \
@@ -75,9 +75,9 @@ $(POFILES) $(GMOFILES) \
 $(DISTFILES.extra1) $(DISTFILES.extra2) $(DISTFILES.extra3)
 
 POTFILES = \
-     ../../src/skarabeusz.cc
+     ../src/skarabeusz.cc
 
-CATALOGS =  en.gmo pl.gmo
+CATALOGS =  pl.gmo
 
 POFILESDEPS_ = $(srcdir)/$(DOMAIN).pot
 POFILESDEPS_yes = $(POFILESDEPS_)

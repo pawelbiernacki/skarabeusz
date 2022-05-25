@@ -875,7 +875,8 @@ polish-update:
 	msgmerge --update po/pl/skarabeusz.po po/skarabeusz.pot	
 
 polish-mo:
-	msgfmt --output-file=po/pl/skarabeusz.mo po/pl/skarabeusz.po
+	msgfmt --output-file=po/pl/skarabeusz.mo po/pl/skarabeusz.po; \
+	cp po/pl/skarabeusz.po po/pl.po
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

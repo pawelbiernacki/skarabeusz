@@ -8,6 +8,8 @@
 #include <fstream>
 
 #define _(STRING) gettext(STRING)
+#define gettext_noop(STRING) STRING
+
 #define SKARABEUSZ_MAX_MESSAGE_BUFFER 1000
 
 #define SKARABEUSZ_DEBUG
@@ -83,6 +85,63 @@ const std::string skarabeusz::generator::names[]=
     "Gizzulim Leatherbuster",
     "Glorimaic Bloodbende"
 };
+
+const std::string skarabeusz::generator::key_names[]=
+{
+    gettext_noop("red"),
+    gettext_noop("white"),
+    gettext_noop("black"),
+    gettext_noop("yellow"),
+    gettext_noop("green"),
+    gettext_noop("blue"),
+    gettext_noop("purple"),
+    gettext_noop("diamond"),
+    gettext_noop("silver"),
+    gettext_noop("golden"),
+    gettext_noop("orange"),
+    gettext_noop("brown"),
+    gettext_noop("gray"),
+    gettext_noop("olive"),
+    gettext_noop("maroon"),
+    gettext_noop("violet"),
+    gettext_noop("magenta"),
+    gettext_noop("cream"),
+    gettext_noop("coral"),
+    gettext_noop("burgundy"),
+    gettext_noop("peach"),
+    gettext_noop("rust"),
+    gettext_noop("pink"),
+    gettext_noop("cyan"),
+    gettext_noop("scarlet")
+};
+
+
+std::string skarabeusz::generator::get_random_key_name()
+{
+    std::vector<std::string> temporary_vector_of_names;
+    
+    for (auto x:key_names)
+    {
+        if (map_name_to_taken_flag.find(x)==map_name_to_taken_flag.end())
+        {
+            temporary_vector_of_names.push_back(x);
+        }
+    }
+    if (temporary_vector_of_names.size()==0)
+    {
+        throw std::runtime_error("not enough key names");
+    }
+    std::uniform_int_distribution<unsigned> distr(0, temporary_vector_of_names.size()-1);            
+    unsigned index = distr(get_random_number_generator());
+    
+    auto [it,success]=map_name_to_taken_flag.insert(std::pair(temporary_vector_of_names[index], true));
+    if (!success)
+    {
+        throw std::runtime_error("failed to insert key name");
+    }
+    
+	return temporary_vector_of_names[index];
+}
 
 std::string skarabeusz::generator::get_random_name()
 {
@@ -446,29 +505,54 @@ std::string skarabeusz::maze::get_wall_description(unsigned id, room::direction_
 }
 
 
+skarabeusz::door_object & skarabeusz::maze::get_door_object(unsigned chamber1, unsigned chamber2)
+{
+    for (auto & d: vector_of_door_objects)
+    {
+        if (d->get_connects(chamber1, chamber2))
+        {
+            return *d;
+        }
+    }
+    throw std::runtime_error("unable to find the door object");
+}
+
+const skarabeusz::door_object & skarabeusz::maze::get_door_object(unsigned chamber1, unsigned chamber2) const
+{
+    for (auto & d: vector_of_door_objects)
+    {
+        if (d->get_connects(chamber1, chamber2))
+        {
+            return *d;
+        }
+    }
+    throw std::runtime_error("unable to find the door object");
+}
+
+
 std::string skarabeusz::maze::get_keys_description_after_exchange(const keys & k) const
 {
     std::stringstream result;
     std::stringstream s;
     
     unsigned amount=0;
-    unsigned number=0,t;
+    unsigned number=0;
+    std::string t;
     
     for (unsigned i=0; i<amount_of_chambers; i++)
     {
         for (unsigned j=i+1; j<amount_of_chambers; j++)
         {
-            if (k.get_matrix()[i][j]) { amount++; t=number+1; }
+            if (k.get_matrix()[i][j]) { amount++; t = get_door_object(i+1,j+1).get_key_name(); }
             number++;
         }
     }
     
     if (amount == 1)
     {
-        s << t;
         
         char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
-        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("The dwarf says: \"I would give you the key %s for your keys.\""), s.str().c_str());
+        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("The dwarf says: \"I would give you the %s key for your keys.\""), t.c_str());
         result << buffer;
     }
     else
@@ -478,7 +562,7 @@ std::string skarabeusz::maze::get_keys_description_after_exchange(const keys & k
         {
             for (unsigned j=i+1; j<amount_of_chambers; j++)
             {
-                if (k.get_matrix()[i][j]) { s << (number+1) << " "; }
+                if (k.get_matrix()[i][j]) { s << get_door_object(i+1,j+1).get_key_name() << " "; }
                 number++;
             }
         }
@@ -496,13 +580,14 @@ std::string skarabeusz::maze::get_keys_description(const keys & k) const
     std::stringstream result;
     std::stringstream s;
     unsigned amount=0;
-    unsigned number=0,t;
+    unsigned number=0;
+    std::string t;
     
     for (unsigned i=0; i<amount_of_chambers; i++)
     {
         for (unsigned j=i+1; j<amount_of_chambers; j++)
         {
-            if (k.get_matrix()[i][j]) { amount++; t=number+1; }
+            if (k.get_matrix()[i][j]) { amount++; t=get_door_object(i+1,j+1).get_key_name(); }
             number++;
         }
     }
@@ -510,9 +595,8 @@ std::string skarabeusz::maze::get_keys_description(const keys & k) const
     
     if (amount == 1)
     {
-        s << t;
         char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
-        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You have the key %s."), s.str().c_str());
+        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You have the %s key."), t.c_str());
         result << buffer;
     }
     else
@@ -523,7 +607,7 @@ std::string skarabeusz::maze::get_keys_description(const keys & k) const
         {
             for (unsigned j=i+1; j<amount_of_chambers; j++)
             {
-                if (k.get_matrix()[i][j]) { s << (number+1) << " "; }
+                if (k.get_matrix()[i][j]) { s << get_door_object(i+1,j+1).get_key_name() << " "; }
                 number++;
             }
         }
@@ -1477,6 +1561,8 @@ void skarabeusz::generator::generate_list_of_pairs_chamber_and_keys()
 }
 
 
+
+
 void skarabeusz::maze::generate_door(generator & g)
 {
     matrix_of_chamber_transitions.resize(amount_of_chambers);
@@ -1604,12 +1690,15 @@ void skarabeusz::maze::generate_door(generator & g)
                 auto &r1{temporary_vector_of_door_candidates[index].first};
                 auto &r2{temporary_vector_of_door_candidates[index].second};
 
-                r1->get_list_of_door().push_back(std::make_shared<door>(r1->get_chamber_id(), r2->get_chamber_id(), *r2, temporary_vector_of_directions[index].first));
-                r2->get_list_of_door().push_back(std::make_shared<door>(r2->get_chamber_id(), r1->get_chamber_id(), *r1, temporary_vector_of_directions[index].second));
+                std::unique_ptr<door_object> dx=std::make_unique<door_object>(r1->get_chamber_id(), r2->get_chamber_id(), ++amount_of_keys, _(g.get_random_key_name().c_str()));
+                
+                r1->get_list_of_door().push_back(std::make_shared<door>(r1->get_chamber_id(), r2->get_chamber_id(), *r2, temporary_vector_of_directions[index].first, *dx));
+                r2->get_list_of_door().push_back(std::make_shared<door>(r2->get_chamber_id(), r1->get_chamber_id(), *r1, temporary_vector_of_directions[index].second, *dx));
                 
                 matrix_of_chamber_transitions[r1->get_chamber_id()-1][r2->get_chamber_id()-1]=true;
                 matrix_of_chamber_transitions[r2->get_chamber_id()-1][r1->get_chamber_id()-1]=true;
-                amount_of_keys++;
+                
+                vector_of_door_objects.push_back(std::move(dx));                
             }
         }
     }

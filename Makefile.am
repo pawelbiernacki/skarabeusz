@@ -16,7 +16,8 @@ polish-update:
 	msgmerge --update po/pl/skarabeusz.po po/skarabeusz.pot	
 
 polish-mo:
-	msgfmt --output-file=po/pl/skarabeusz.mo po/pl/skarabeusz.po
+	msgfmt --output-file=po/pl/skarabeusz.mo po/pl/skarabeusz.po; \
+	cp po/pl/skarabeusz.po po/pl.po
 	
 locale_pldir = ${localedir}/pl/LC_MESSAGES
 
