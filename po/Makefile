@@ -64,10 +64,10 @@ MSGINIT = msginit
 MSGCONV = msgconv
 MSGFILTER = msgfilter
 
-POFILES = 
-GMOFILES = 
-UPDATEPOFILES = 
-DUMMYPOFILES = 
+POFILES =  en.po pl.po
+GMOFILES =  en.gmo pl.gmo
+UPDATEPOFILES =  en.po-update pl.po-update
+DUMMYPOFILES =  en.nop pl.nop
 DISTFILES.common = Makefile.in.in remove-potcdate.sin \
 $(DISTFILES.common.extra1) $(DISTFILES.common.extra2) $(DISTFILES.common.extra3)
 DISTFILES = $(DISTFILES.common) Makevars POTFILES.in \
@@ -77,7 +77,7 @@ $(DISTFILES.extra1) $(DISTFILES.extra2) $(DISTFILES.extra3)
 POTFILES = \
      ../../src/skarabeusz.cc
 
-CATALOGS = 
+CATALOGS =  en.gmo pl.gmo
 
 POFILESDEPS_ = $(srcdir)/$(DOMAIN).pot
 POFILESDEPS_yes = $(POFILESDEPS_)
@@ -582,7 +582,7 @@ update-gmo: Makefile $(GMOFILES)
 # because execution permission bits may not work on the current file system.
 # Use /bin/sh, which is the shell determined by autoconf for the use by its
 # scripts, not $(SHELL) which is hardwired to /bin/sh and may be deficient.
-Makefile: Makefile.in.in Makevars $(top_builddir)/config.status POTFILES.in
+Makefile: Makefile.in.in Makevars $(top_builddir)/config.status POTFILES.in LINGUAS
 	cd $(top_builddir) \
 	  && /bin/sh ./config.status $(subdir)/$@.in po-directories
 

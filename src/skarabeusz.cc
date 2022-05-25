@@ -2325,12 +2325,11 @@ void skarabeusz::maze::create_maps(const map_parameters & mp)
 }
 
 int main(int argc, char * argv[])
-{
-    
-    setlocale (LC_ALL, "");
-    bindtextdomain (PACKAGE, LOCALEDIR);
-    textdomain(PACKAGE);    
-    
+{        
+    setlocale(LC_ALL, "");
+    bindtextdomain ("skarabeusz", LOCALEDIR);
+    textdomain("skarabeusz");    
+        
     unsigned x_range=10,y_range=7,z_range=1,amount_of_chambers=5,max_amount_of_keys_to_hold=2,amount_of_alternative_endings=1;
     
     for (unsigned i=1; i<argc; i++)

@@ -18,3 +18,6 @@ polish-update:
 polish-mo:
 	msgfmt --output-file=po/pl/skarabeusz.mo po/pl/skarabeusz.po
 	
+locale_pldir = ${localedir}/pl/LC_MESSAGES
+
+locale_pl_DATA = po/pl/skarabeusz.mo
