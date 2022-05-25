@@ -77,7 +77,7 @@ msgid "The dwarf pays no attention at you."
 msgstr "Krasnolud nie zwraca na Ciebie uwagi."
 
 #: src/skarabeusz.cc:511
-#, fuzzy, c-format
+#, c-format
 msgid "The dwarf says: \"I would give you the %s key for your keys.\""
 msgstr "Krasnolud mówi: \"Dam Ci klucz %s w zamian za Twoje klucze.\""
 
