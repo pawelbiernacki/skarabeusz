@@ -1,2 +1,25 @@
 
-Paragraph based game generator.
+SKARABEUSZ - a paragraph game generator.
+
+You can use skarabeusz to generate a number of PNG files containing random maps for all the levels (maze_?.png) and an associated TEX document referring to it (maze.tex).
+
+The amount of levels depends on the "z range". By default it is 1.
+
+Then you should compile the TEX file with the pdflatex tool. This will produce a PDF file that is the end result (a paragraph game).
+
+Skarabeusz currently supports English and Polish, depending on the LANG environment variable.
+
+Make it LANG to be "pl_PL.UTF-8" to have an output in Polish.
+
+Skarabeusz accepts the following options (in any order):
+    -x <x_range>
+    -y <y range>
+    -z <z range>
+    -c <amount of chambers>
+    -a <amount of alternative endings>
+
+Running skarabeusz with no parameters at all works as:
+
+skarabeusz -x 10 -y 7 -z 1 -c 5 -a 1
+
+Warning: Making c too high will cause skarabeusz to run very long.
