@@ -2059,9 +2059,12 @@ void skarabeusz::maze::choose_seed_rooms(generator & g)
     }
 }
 
-void skarabeusz::maze::create_latex()
+void skarabeusz::maze::create_latex(const std::string & prefix)
 {
-    std::ofstream file_stream("maze.tex");
+    std::stringstream s;
+    s << prefix << ".tex";
+    
+    std::ofstream file_stream(s.str());
     file_stream 
     << "\\documentclass[10pt,a4paper,titlepage,openbib]{book}\n"
     << "\\usepackage{ulem}\n"
@@ -2093,7 +2096,7 @@ void skarabeusz::maze::create_latex()
         file_stream
         << "\\newpage\n"
         << buffer << "\\\\\n"
-        << "\\includegraphics[width=16cm,height=12cm]{map_" << z << ".png}\\\\\n";
+        << "\\includegraphics[width=16cm,height=12cm]{" << prefix << "_" << z << ".png}\\\\\n";
     }
 
     file_stream << "\\newpage\n";
@@ -2406,7 +2409,7 @@ bool skarabeusz::room::get_is_connected(const maze & m, direction_type t) const
 }
 
 
-void skarabeusz::maze::create_maps(const map_parameters & mp)
+void skarabeusz::maze::create_maps(const map_parameters & mp, const std::string & prefix)
 {
     for (unsigned z=0; z<max_z_range; z++)
     {
@@ -2461,7 +2464,7 @@ void skarabeusz::maze::create_maps(const map_parameters & mp)
         
         std::stringstream map_name_stream;
         
-        map_name_stream << "map_" << z << ".png";
+        map_name_stream << prefix << "_" << z << ".png";
         
         pngout = fopen(map_name_stream.str().c_str(), "wb");
         gdImagePng(i.get_image_pointer(), pngout);
@@ -2476,6 +2479,7 @@ int main(int argc, char * argv[])
     textdomain("skarabeusz");    
         
     unsigned x_range=10,y_range=7,z_range=1,amount_of_chambers=5,max_amount_of_keys_to_hold=2,amount_of_alternative_endings=1;
+    std::string prefix = "map";
     
     for (unsigned i=1; i<argc; i++)
     {
@@ -2504,6 +2508,11 @@ int main(int argc, char * argv[])
             amount_of_alternative_endings = atoi(argv[++i]);
         }        
         else
+        if (!strcmp(argv[i], "-p"))
+        {
+            prefix = std::string(argv[++i]);
+        }
+        else
         {
             std::cerr << "unrecognized option " << argv[i] << "\n";
             exit(1);
@@ -2523,8 +2532,8 @@ int main(int argc, char * argv[])
     
     skarabeusz::map_parameters mp{80,80};
     
-    m.create_maps(mp);
-    m.create_latex();
+    m.create_maps(mp, prefix);
+    m.create_latex(prefix);
     
     return 0;
 }

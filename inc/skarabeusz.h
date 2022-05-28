@@ -34,7 +34,7 @@ namespace skarabeusz
         unsigned amount_of_chambers;
         
         unsigned amount_of_alternative_endings;
-        
+                
     public:
         enum class output_mode_type { NONE=0x0, LATEX=0x1, HTML=0x2 };
         
@@ -436,9 +436,9 @@ namespace skarabeusz
                 
         void create_html();
         
-        void create_latex();
+        void create_latex(const std::string & prefix);
         
-        void create_maps(const map_parameters & mp);
+        void create_maps(const map_parameters & mp, const std::string & prefix);
         
         void choose_seed_rooms(generator & g);
         

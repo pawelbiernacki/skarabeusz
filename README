@@ -17,9 +17,10 @@ Skarabeusz accepts the following options (in any order):
     -z <z range>
     -c <amount of chambers>
     -a <amount of alternative endings>
+    -p <prefix>
 
 Running skarabeusz with no parameters at all works as:
 
-skarabeusz -x 10 -y 7 -z 1 -c 5 -a 1
+skarabeusz -x 10 -y 7 -z 1 -c 5 -a 1 -p "map"
 
 Warning: Making c too high will cause skarabeusz to run very long.
