@@ -1,0 +1,457 @@
+# Russian translations for skarabeusz package.
+# Copyright (C) 2022 THE skarabeusz'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the skarabeusz package.
+# Pawel Biernacki <pawel.f.biernacki@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: skarabeusz 0.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-25 21:13+0300\n"
+"PO-Revision-Date: 2022-05-29 22:19+0300\n"
+"Last-Translator: Pawel Biernacki <pawel.f.biernacki@gmail.com>\n"
+"Language-Team: Russian <gnu@d07.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/skarabeusz.cc:293
+#, c-format
+msgid "Apart from you there is a dwarf at %s here."
+msgstr "Кроме тебя в %s находится гном."
+
+#: src/skarabeusz.cc:982
+msgid "Congratulations! You have won!"
+msgstr "Поздравляю! Ты выиграл!"
+
+#: src/skarabeusz.cc:848
+#, c-format
+msgid "Go to the field %s - "
+msgstr "Иди на поле %s - "
+
+#: src/skarabeusz.cc:976
+msgid "Hello, my name is "
+msgstr "Привет, меня зовут "
+
+#: src/skarabeusz.cc:996
+msgid "If you accept it go to "
+msgstr "Если ты согласен иди на "
+
+#: src/skarabeusz.cc:889
+msgid "None of your keys opens the east door."
+msgstr "Никакой из твоих ключей не открывает восточной двери."
+
+#: src/skarabeusz.cc:937
+msgid "None of your keys opens the hatch in the ceiling."
+msgstr "Никакой из твоих ключей не открывает люка в потолке."
+
+#: src/skarabeusz.cc:925
+msgid "None of your keys opens the hatch in the floor."
+msgstr "Никакой из твоих ключей не открывает люка в полу."
+
+#: src/skarabeusz.cc:877
+msgid "None of your keys opens the north door."
+msgstr "Никакой из твоих ключей не открывает северной двери."
+
+#: src/skarabeusz.cc:901
+msgid "None of your keys opens the south door."
+msgstr "Никакой из твоих ключей не открывает южной двери."
+
+#: src/skarabeusz.cc:913
+msgid "None of your keys opens the west door."
+msgstr "Никакой из твоих ключей не открывает западной двери."
+
+#: src/skarabeusz.cc:822
+msgid "Talk with the dwarf - go to "
+msgstr "Поговори с гномом - иди на "
+
+#: src/skarabeusz.cc:1004
+msgid "The dwarf does not accept any exchange."
+msgstr "Гном не хочет поменятся ключами."
+
+#: src/skarabeusz.cc:671
+msgid "The dwarf pays no attention at you."
+msgstr "Гном не обращает на тебя внемания."
+
+#: src/skarabeusz.cc:590
+#, c-format
+msgid "The dwarf says: \"I would give you the %s key for your keys.\""
+msgstr "Гном говорит: \"Я бы дал тебе %s ключ в обмен за твои ключи.\""
+
+#: src/skarabeusz.cc:606
+#, c-format
+msgid "The dwarf says: \"I would give you the keys %s for your keys.\""
+msgstr "Гном говорит: \"Я бы дал тебе ключи %s в обмен за твои ключи.\""
+
+#: src/skarabeusz.cc:382
+#, c-format
+msgid "There are %i door in the eastern wall."
+msgid_plural "There are %i door in the eastern wall."
+msgstr[0] "В восточной стене %i дверь."
+msgstr[1] "В восточной стене %i дверя."
+msgstr[2] "В восточной стене %i дверей."
+
+#: src/skarabeusz.cc:349
+#, c-format
+msgid "There are %i door in the northern wall."
+msgid_plural "There are %i door in the northern wall."
+msgstr[0] "В северной стене %i дверь."
+msgstr[1] "В северной стене %i дверя."
+msgstr[2] "В северной стене %i дверей."
+
+#: src/skarabeusz.cc:415
+#, c-format
+msgid "There are %i door in the southern wall."
+msgid_plural "There are %i door in the southern wall."
+msgstr[0] "В южной стене %i дверь."
+msgstr[1] "В южной стене %i дверя."
+msgstr[2] "В южной стене %i дверей."
+
+#: src/skarabeusz.cc:447
+#, c-format
+msgid "There are %i door in the western wall."
+msgid_plural "There are %i door in the western wall."
+msgstr[0] "В западной стене %i дверь."
+msgstr[1] "В западной стене %i дверя."
+msgstr[2] "В западной стене %i дверей."
+
+#: src/skarabeusz.cc:482
+#, c-format
+msgid "There is %i hatch in the ceiling."
+msgid_plural "There are %i hatches in the ceiling."
+msgstr[0] "В потолке %i люк."
+msgstr[1] "В потолке %i люка."
+msgstr[2] "В потолке %i люков."
+
+#: src/skarabeusz.cc:521
+#, c-format
+msgid "There is %i hatch in the floor."
+msgid_plural "There are %i hatches in the floor."
+msgstr[0] "В полу %i люк."
+msgstr[1] "В полу %i люка."
+msgstr[2] "В полу %i люков."
+
+#: src/skarabeusz.cc:376
+#, c-format
+msgid "There is a door %s in the eastern wall."
+msgstr "В восточной стене дверь %s."
+
+#: src/skarabeusz.cc:343
+#, c-format
+msgid "There is a door %s in the northern wall."
+msgstr "В северной стене дверь %s."
+
+#: src/skarabeusz.cc:409
+#, c-format
+msgid "There is a door %s in the southern wall."
+msgstr "В южной стене дверь %s."
+
+#: src/skarabeusz.cc:441
+#, c-format
+msgid "There is a door %s in the western wall."
+msgstr "В западной стене дверь %s."
+
+#: src/skarabeusz.cc:476
+#, c-format
+msgid "There is a hatch %s in the ceiling."
+msgstr "В потолке люк %s."
+
+#: src/skarabeusz.cc:515
+#, c-format
+msgid "There is a hatch %s in the floor."
+msgstr "В полу люк %s."
+
+#: src/skarabeusz.cc:2091
+#, c-format
+msgid "This is a map of the level %i."
+msgstr "Это карта %i-го этажа."
+
+#: src/skarabeusz.cc:821
+msgid "What do you want to do?"
+msgstr "Что ты хочешь сделать?"
+
+#: src/skarabeusz.cc:253
+msgid "You are standing in a corridor leading from east to west."
+msgstr "Ты в коридоре ведущим из востока на запад."
+
+#: src/skarabeusz.cc:248
+msgid "You are standing in a corridor leading from north to south."
+msgstr "Ты в коридоре ведущим из севера на юг."
+
+#: src/skarabeusz.cc:275
+msgid "You are standing in a large room."
+msgstr "Ты в большой комнате."
+
+#: src/skarabeusz.cc:271
+msgid "You are standing in a large square room."
+msgstr "Ты в большой квадратной комнате."
+
+#: src/skarabeusz.cc:243 src/skarabeusz.cc:264
+msgid "You are standing in a small room."
+msgstr "Ты в малой комнате."
+
+#: src/skarabeusz.cc:260
+msgid "You are standing in a small square room."
+msgstr "Ты в малой квадратной комнате."
+
+#: src/skarabeusz.cc:854
+#, c-format
+msgid "You are standing in front of the door at %s - "
+msgstr "Ты перед дверью %s - "
+
+#: src/skarabeusz.cc:969
+#, c-format
+msgid "You are standing next to the dwarf at %s."
+msgstr "Ты около гнома на %s."
+
+#: src/skarabeusz.cc:681
+#, c-format
+msgid "You are talking with the dwarf at %s."
+msgstr "Ты говоришь с гномом на %s."
+
+#: src/skarabeusz.cc:944 src/skarabeusz.cc:1008
+msgid "You can look around "
+msgstr "Ты можешь осмотреться "
+
+#: src/skarabeusz.cc:883
+#, c-format
+msgid "You can open the door %s and go east "
+msgstr "Можешь открыть дверь %s и идти на восток "
+
+#: src/skarabeusz.cc:871
+#, c-format
+msgid "You can open the door %s and go north "
+msgstr "Можешь открыть дверь %s и идти на север "
+
+#: src/skarabeusz.cc:895
+#, c-format
+msgid "You can open the door %s and go south "
+msgstr "Можешь открыть дверь %s и идти на юг "
+
+#: src/skarabeusz.cc:907
+#, c-format
+msgid "You can open the door %s and go west "
+msgstr "Можешь открыть дверь %s и идти на запад "
+
+#: src/skarabeusz.cc:931
+#, c-format
+msgid "You can open the hatch %s and ascend to the upper level "
+msgstr "Можешь открыть люк %s и подняться на верхний уровень "
+
+#: src/skarabeusz.cc:919
+#, c-format
+msgid "You can open the hatch %s and descend to the lower level "
+msgstr "Можешь открыть люк %s и спуститься на нижний уровень "
+
+#: src/skarabeusz.cc:634
+#, c-format
+msgid "You have the %s key."
+msgstr "У тебя %s ключ."
+
+#: src/skarabeusz.cc:650
+#, c-format
+msgid "You have the keys %s."
+msgstr "У тебя ключи %s."
+
+#: src/skarabeusz.cc:123
+msgid "black"
+msgstr "черный"
+
+#: src/skarabeusz.cc:126
+msgid "blue"
+msgstr "синий"
+
+#: src/skarabeusz.cc:132
+msgid "brown"
+msgstr "коричневый"
+
+#: src/skarabeusz.cc:140
+msgid "burgundy"
+msgstr "бордовый"
+
+#: src/skarabeusz.cc:139
+msgid "coral"
+msgstr "коралловый"
+
+#: src/skarabeusz.cc:138
+msgid "cream"
+msgstr "кремовый"
+
+#: src/skarabeusz.cc:144
+msgid "cyan"
+msgstr "голубой"
+
+#: src/skarabeusz.cc:128
+msgid "diamond"
+msgstr "алмазный"
+
+#: src/skarabeusz.cc:130
+msgid "golden"
+msgstr "золотой"
+
+#: src/skarabeusz.cc:133
+msgid "gray"
+msgstr "серый"
+
+#: src/skarabeusz.cc:125
+msgid "green"
+msgstr "зеленый"
+
+#: src/skarabeusz.cc:137
+msgid "magenta"
+msgstr "пурпурный"
+
+#: src/skarabeusz.cc:135
+msgid "maroon"
+msgstr "каштановый"
+
+#: src/skarabeusz.cc:134
+msgid "olive"
+msgstr "оливковый"
+
+#: src/skarabeusz.cc:131
+msgid "orange"
+msgstr "апельсиновый"
+
+#: src/skarabeusz.cc:141
+msgid "peach"
+msgstr "персиковый"
+
+#: src/skarabeusz.cc:143
+msgid "pink"
+msgstr "розовый"
+
+#: src/skarabeusz.cc:127
+msgid "purple"
+msgstr "фиолетовый"
+
+#: src/skarabeusz.cc:121
+msgid "red"
+msgstr "красный"
+
+#: src/skarabeusz.cc:142
+msgid "rust"
+msgstr "ржавый"
+
+#: src/skarabeusz.cc:145
+msgid "scarlet"
+msgstr "алый"
+
+#: src/skarabeusz.cc:129
+msgid "silver"
+msgstr "серебряный"
+
+#: src/skarabeusz.cc:136
+msgid "violet"
+msgstr "лиловый"
+
+#: src/skarabeusz.cc:122
+msgid "white"
+msgstr "белый"
+
+#: src/skarabeusz.cc:93
+msgid "with the black key"
+msgstr "черным ключом"
+
+#: src/skarabeusz.cc:96
+msgid "with the blue key"
+msgstr "синим ключом"
+
+#: src/skarabeusz.cc:102
+msgid "with the brown key"
+msgstr "коричневым ключом"
+
+#: src/skarabeusz.cc:110
+msgid "with the burgundy key"
+msgstr "бордовым ключом"
+
+#: src/skarabeusz.cc:109
+msgid "with the coral key"
+msgstr "коралловым ключом"
+
+#: src/skarabeusz.cc:108
+msgid "with the cream key"
+msgstr "кремовым ключом"
+
+#: src/skarabeusz.cc:114
+msgid "with the cyan key"
+msgstr "голубым ключом"
+
+#: src/skarabeusz.cc:98
+msgid "with the diamond key"
+msgstr "алмазным ключом"
+
+#: src/skarabeusz.cc:100
+msgid "with the golden key"
+msgstr "золотым ключом"
+
+#: src/skarabeusz.cc:103
+msgid "with the gray key"
+msgstr "серым ключом"
+
+#: src/skarabeusz.cc:95
+msgid "with the green key"
+msgstr "зеленым ключом"
+
+#: src/skarabeusz.cc:107
+msgid "with the magenta key"
+msgstr "пурпурным ключом"
+
+#: src/skarabeusz.cc:105
+msgid "with the maroon key"
+msgstr "каштановым ключом"
+
+#: src/skarabeusz.cc:104
+msgid "with the olive key"
+msgstr "оливковым ключом"
+
+#: src/skarabeusz.cc:101
+msgid "with the orange key"
+msgstr "апельсиновым ключом"
+
+#: src/skarabeusz.cc:111
+msgid "with the peach key"
+msgstr "персиковым ключом"
+
+#: src/skarabeusz.cc:113
+msgid "with the pink key"
+msgstr "розовым ключом"
+
+#: src/skarabeusz.cc:97
+msgid "with the purple key"
+msgstr "фиолетовым ключом"
+
+#: src/skarabeusz.cc:91
+msgid "with the red key"
+msgstr "красным ключом"
+
+#: src/skarabeusz.cc:112
+msgid "with the rust key"
+msgstr "ржавым ключом"
+
+#: src/skarabeusz.cc:115
+msgid "with the scarlet key"
+msgstr "алым ключом"
+
+#: src/skarabeusz.cc:99
+msgid "with the silver key"
+msgstr "серебряным ключом"
+
+#: src/skarabeusz.cc:106
+msgid "with the violet key"
+msgstr "лиловым ключом"
+
+#: src/skarabeusz.cc:92
+msgid "with the white key"
+msgstr "белым ключом"
+
+#: src/skarabeusz.cc:94
+msgid "with the yellow key"
+msgstr "желтым ключом"
+
+#: src/skarabeusz.cc:124
+msgid "yellow"
+msgstr "желтый"

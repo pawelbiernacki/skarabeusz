@@ -2075,6 +2075,7 @@ void skarabeusz::maze::create_latex(const std::string & prefix)
     << "\\usepackage{listings}\n"
     << "\\usepackage{tcolorbox}\n"
     << "\\usepackage[utf8]{inputenc}\n"
+    << "\\usepackage[english,russian]{babel}\n"
     << "\\usepackage[T1]{fontenc}\n"
     << "\\usepackage{hyperref}\n"
     << "\\hypersetup{\n"
