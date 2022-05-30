@@ -2064,7 +2064,7 @@ void skarabeusz::maze::choose_seed_rooms(generator & g)
     }
     
     
-    for (unsigned i=max_z_range; i<=amount_of_chambers; i++)
+    for (unsigned i=max_z_range+1; i<=amount_of_chambers; i++)
     {
         unsigned x,y,z;
         do
