@@ -535,6 +535,7 @@ namespace skarabeusz
         void run();
         
         void get_random_room(unsigned & x, unsigned & y, unsigned & z);
+        void get_random_room_on_level_z(unsigned & x, unsigned & y, unsigned z);
         void get_random_key_name(std::string & normal_form, std::string & with_the_key_form);
         
         std::mt19937 & get_random_number_generator() { return gen; }

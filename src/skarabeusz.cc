@@ -2040,7 +2040,31 @@ void skarabeusz::maze::resize(unsigned xr, unsigned yr, unsigned zr)
 
 void skarabeusz::maze::choose_seed_rooms(generator & g)
 {    
-    for (unsigned i=1; i<=amount_of_chambers; i++)
+    if (amount_of_chambers < max_z_range)
+    {
+        throw std::runtime_error("the amount of chambers must not be lower than z_range");
+    }
+    
+    for (unsigned i=1; i<=max_z_range; i++)
+    {
+        unsigned x,y,z=i-1;
+        do
+        {
+            g.get_random_room_on_level_z(x, y, z);
+        }
+        while (array_of_rooms[x][y][z]->get_is_assigned_to_any_chamber());
+        
+        array_of_rooms[x][y][z]->assign_to_chamber(i, true);
+        
+        vector_of_chambers[i-1]->get_seed().set_x(x);
+        vector_of_chambers[i-1]->get_seed().set_y(y);
+        vector_of_chambers[i-1]->get_seed().set_z(z);
+        
+        DEBUG("seed room for " << i << " is " << x << "," << y << "," << z);
+    }
+    
+    
+    for (unsigned i=max_z_range; i<=amount_of_chambers; i++)
     {
         unsigned x,y,z;
         do
@@ -2056,7 +2080,7 @@ void skarabeusz::maze::choose_seed_rooms(generator & g)
         vector_of_chambers[i-1]->get_seed().set_z(z);
         
         DEBUG("seed room for " << i << " is " << x << "," << y << "," << z);
-    }
+    }    
 }
 
 void skarabeusz::maze::create_latex(const std::string & prefix)
@@ -2119,6 +2143,13 @@ void skarabeusz::hyperlink::print(std::ostream & s) const
 
 void skarabeusz::maze::create_html()
 {
+}
+
+
+void skarabeusz::generator::get_random_room_on_level_z(unsigned & x, unsigned & y, unsigned z)
+{
+    x = x_distr(gen);
+    y = y_distr(gen);
 }
 
 void skarabeusz::generator::get_random_room(unsigned & x, unsigned & y, unsigned & z)
@@ -2518,6 +2549,12 @@ int main(int argc, char * argv[])
             std::cerr << "unrecognized option " << argv[i] << "\n";
             exit(1);
         }
+    }
+    
+    if (amount_of_chambers < z_range)
+    {
+        std::cerr << "The amount of chambers must be equal or greater than the <z range>\n";
+        exit(1);
     }
     
     skarabeusz::generator_parameters gp{x_range,y_range,z_range, // x,y,z
