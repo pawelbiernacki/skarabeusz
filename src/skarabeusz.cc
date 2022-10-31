@@ -214,11 +214,14 @@ void skarabeusz::paragraph::print_html(std::ostream & s) const
     
     s << "<img src=\"map_" << z << "_" << (get_number()-1) << ".png\">\n<br/>\n";
     
+    s << "<div class=\"skarabeusz\">\n";
+    
     for (auto & a: list_of_paragraph_items)
     {
         a->print_html(s);
         s << " \n";
     }    
+    s << "</div>\n";
 }
 
 
@@ -2172,8 +2175,20 @@ void skarabeusz::hyperlink::print_latex(std::ostream & s) const
     s << "\\hyperlink{par " << my_paragraph.get_number() << "}{" << my_paragraph.get_number() << "}"; 
 }
 
-void skarabeusz::maze::create_html(const std::string & prefix)
+void skarabeusz::maze::create_html(const std::string & prefix, const std::string & html_head_file)
 {
+    std::stringstream html_head_stringstream;
+    std::string line;
+    if (html_head_file != "")
+    {
+        std::ifstream head_stream(html_head_file);
+        while (std::getline(head_stream, line))
+        {
+            html_head_stringstream << line << "\n";
+        }
+    }
+    
+    
     for (unsigned z=0; z<amount_of_paragraphs; z++)
     {
         std::stringstream s;
@@ -2181,11 +2196,7 @@ void skarabeusz::maze::create_html(const std::string & prefix)
         
         std::ofstream file_stream(s.str());
         file_stream 
-        << "<!DOCTYPE html>\n"
-        << "<html>\n"
-        << "<head>\n"
-        << "<meta charset=\"UTF-8\">\n"
-        << "</head>\n"
+        << "<!DOCTYPE html>\n" << html_head_stringstream.str()
         << "<body>\n";
         
         vector_of_paragraphs[z]->print_html(file_stream);
@@ -2636,6 +2647,7 @@ int main(int argc, char * argv[])
         
     unsigned x_range=10,y_range=7,z_range=1,amount_of_chambers=5,max_amount_of_keys_to_hold=2,amount_of_alternative_endings=1;
     std::string prefix = "map";
+    std::string html_head_filename="";
     enum class output_type { HTML, LATEX } output = output_type::LATEX;
     
     for (unsigned i=1; i<argc; i++)
@@ -2663,6 +2675,11 @@ int main(int argc, char * argv[])
                 std::cerr << "unsupported output " << argv[i] << "\n";
                 exit(-1);
             }
+        }
+        else
+        if (!strcmp(argv[i], "--head-file"))
+        {
+            html_head_filename = std::string(argv[++i]);
         }
         else
         if (!strcmp(argv[i], "-x"))
@@ -2730,7 +2747,7 @@ int main(int argc, char * argv[])
             
         case output_type::HTML:
             m.create_maps_html(mp, prefix);
-            m.create_html(prefix);
+            m.create_html(prefix, html_head_filename);
             break;
             
         default:;
