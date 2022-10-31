@@ -320,7 +320,8 @@ namespace skarabeusz
     public:
         virtual ~paragraph_item() {}
         
-        virtual void print(std::ostream & s) const = 0;
+        virtual void print_latex(std::ostream & s) const = 0;
+        virtual void print_html(std::ostream & s) const = 0;
     };
     
     
@@ -330,7 +331,8 @@ namespace skarabeusz
         const std::string text;
     public:
         normal_text(const std::string & t): text{t} {}
-        virtual void print(std::ostream & s) const override { s << text; }
+        virtual void print_latex(std::ostream & s) const override { s << text; }
+        virtual void print_html(std::ostream & s) const override { s << text; }
     };
     
     class paragraph;
@@ -341,7 +343,8 @@ namespace skarabeusz
         const paragraph & my_paragraph;
     public:
         hyperlink(const paragraph & p): my_paragraph{p} {}
-        virtual void print(std::ostream & s) const override;
+        virtual void print_latex(std::ostream & s) const override;
+        virtual void print_html(std::ostream & s) const override;
     };
     
     
@@ -357,10 +360,12 @@ namespace skarabeusz
         paragraph_type type;
         unsigned x,y,z;
     public:
-        paragraph(unsigned n, const chamber_and_keys & c, paragraph_type t): number{n}, my_state{c}, type{t}, x{0}, y{0},z{0}, ending{false} {}
+        //paragraph(unsigned n, const chamber_and_keys & c, paragraph_type t): number{n}, my_state{c}, type{t}, x{0}, y{0},z{0}, ending{false} {}
         paragraph(unsigned n, const chamber_and_keys & c, unsigned nx, unsigned ny, unsigned nz, paragraph_type t): number{n}, my_state{c}, type{t}, x{nx}, y{ny},z{nz}, ending{false} {}
         void add(std::unique_ptr<paragraph_item> && i) { list_of_paragraph_items.push_back(std::move(i)); }
-        void print(std::ostream & s) const;
+        
+        void print_latex(std::ostream & s) const;        
+        void print_html(std::ostream & s) const;
         
         chamber_and_keys& get_state() { return my_state; }
         
@@ -434,11 +439,11 @@ namespace skarabeusz
         
         void create_chambers(unsigned aoc);
                 
-        void create_html();
-        
+        void create_html(const std::string & prefix);        
         void create_latex(const std::string & prefix);
         
-        void create_maps(const map_parameters & mp, const std::string & prefix);
+        void create_maps_latex(const map_parameters & mp, const std::string & prefix);
+        void create_maps_html(const map_parameters & mp, const std::string & prefix);
         
         void choose_seed_rooms(generator & g);
         

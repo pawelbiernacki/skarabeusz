@@ -208,16 +208,28 @@ std::string skarabeusz::generator::get_random_name()
 }
 
 
+void skarabeusz::paragraph::print_html(std::ostream & s) const
+{
+    s << "<h3>" << get_number() << "</h3>\n";
+    
+    s << "<img src=\"map_" << z << "_" << (get_number()-1) << ".png\">\n<br/>\n";
+    
+    for (auto & a: list_of_paragraph_items)
+    {
+        a->print_html(s);
+        s << " \n";
+    }    
+}
 
 
-void skarabeusz::paragraph::print(std::ostream & s) const
+void skarabeusz::paragraph::print_latex(std::ostream & s) const
 {
     s << "\\begin{normalsize}\n";
 	s << "\\textbf{\\hypertarget{par " << number << "}{" << number << "}}\n";
     
     for (auto & a: list_of_paragraph_items)
     {
-        a->print(s);
+        a->print_latex(s);
         s << "\n";
     }
     s << "\\\\\n";    
@@ -746,7 +758,14 @@ void skarabeusz::generator::generate_paragraphs()
     for (auto & i: list_of_processed_pairs_chamber_and_keys)
     {
         chamber_and_keys c{i.first, i.second};
-        target.vector_of_paragraphs.push_back(std::make_unique<paragraph>(++number, c, paragraph::paragraph_type::CHAMBER_DESCRIPTION));
+        
+        unsigned x, y, z;
+        
+        x = target.vector_of_chambers[i.first]->get_seed().x;
+        y = target.vector_of_chambers[i.first]->get_seed().y;
+        z = target.vector_of_chambers[i.first]->get_seed().z;
+        
+        target.vector_of_paragraphs.push_back(std::make_unique<paragraph>(++number, c, x, y, z, paragraph::paragraph_type::CHAMBER_DESCRIPTION));
     }    
     
     amount_of_chamber_descriptions = list_of_processed_pairs_chamber_and_keys.size();
@@ -754,7 +773,14 @@ void skarabeusz::generator::generate_paragraphs()
     for (auto & i: list_of_processed_pairs_chamber_and_keys)
     {
         chamber_and_keys c{i.first, i.second};
-        target.vector_of_paragraphs.push_back(std::make_unique<paragraph>(++number, c, paragraph::paragraph_type::DISCUSSION));
+        
+        unsigned x, y, z;
+        
+        x = target.vector_of_chambers[i.first]->get_seed().x;
+        y = target.vector_of_chambers[i.first]->get_seed().y;
+        z = target.vector_of_chambers[i.first]->get_seed().z;
+        
+        target.vector_of_paragraphs.push_back(std::make_unique<paragraph>(++number, c, x, y, z , paragraph::paragraph_type::DISCUSSION));
     }    
     
     amount_of_discussions = list_of_processed_pairs_chamber_and_keys.size();
@@ -1205,7 +1231,7 @@ void skarabeusz::generator::process_a_journey(unsigned chamber1, keys & keys1, u
 
 	do
 	{
-        DEBUG("amount of pairs that have been done " << get_amount_of_pairs_that_have_been_done() << "/" << vector_of_pairs_chamber_and_keys.size());
+        //DEBUG("amount of pairs that have been done " << get_amount_of_pairs_that_have_been_done() << "/" << vector_of_pairs_chamber_and_keys.size());
         
 		bool s = process_a_journey_step();
 
@@ -2128,7 +2154,7 @@ void skarabeusz::maze::create_latex(const std::string & prefix)
     
     for (unsigned z=0; z<amount_of_paragraphs; z++)
     {
-        vector_of_paragraphs[z]->print(file_stream);
+        vector_of_paragraphs[z]->print_latex(file_stream);
     }
         
     file_stream
@@ -2136,13 +2162,39 @@ void skarabeusz::maze::create_latex(const std::string & prefix)
 }
 
 
-void skarabeusz::hyperlink::print(std::ostream & s) const 
+void skarabeusz::hyperlink::print_html(std::ostream & s) const 
+{
+    s << "<a href=\"map_" << my_paragraph.get_number() << ".html\">" << my_paragraph.get_number() << "</a>\n";
+}
+
+void skarabeusz::hyperlink::print_latex(std::ostream & s) const 
 { 
     s << "\\hyperlink{par " << my_paragraph.get_number() << "}{" << my_paragraph.get_number() << "}"; 
 }
 
-void skarabeusz::maze::create_html()
+void skarabeusz::maze::create_html(const std::string & prefix)
 {
+    for (unsigned z=0; z<amount_of_paragraphs; z++)
+    {
+        std::stringstream s;
+        s << prefix << "_" << (z+1) << ".html";
+        
+        std::ofstream file_stream(s.str());
+        file_stream 
+        << "<!DOCTYPE html>\n"
+        << "<html>\n"
+        << "<head>\n"
+        << "<meta charset=\"UTF-8\">\n"
+        << "</head>\n"
+        << "<body>\n";
+        
+        vector_of_paragraphs[z]->print_html(file_stream);
+        
+        file_stream
+        << "</body>\n"
+        << "</html>\n";
+        
+    }
 }
 
 
@@ -2441,7 +2493,81 @@ bool skarabeusz::room::get_is_connected(const maze & m, direction_type t) const
 }
 
 
-void skarabeusz::maze::create_maps(const map_parameters & mp, const std::string & prefix)
+void skarabeusz::maze::create_maps_html(const map_parameters & mp, const std::string & prefix)
+{
+    unsigned z=0;
+    
+    for (unsigned p=0; p<amount_of_paragraphs; p++)
+    {
+        z = vector_of_paragraphs[p]->get_z();
+        
+        image i(800, 600);
+        int white = i.allocate_color(255, 255, 255);
+        int black = i.allocate_color(0,0,0);
+        int red = i.allocate_color(255,0,0);
+        int blue = i.allocate_color(100,100,255);
+        int green = i.allocate_color(0,255,0);
+        
+        for (unsigned x=0; x<max_x_range; x++)
+        {
+            for (unsigned y=0; y<max_y_range; y++)
+            {
+                bool skip_filling = false;
+                
+                if (x == vector_of_paragraphs[p]->get_x() && y == vector_of_paragraphs[p]->get_y())
+                {
+                    i.fill_ellipse(x*mp.room_width+mp.room_width/2,y*mp.room_height+mp.room_height/2,mp.room_width/2,mp.room_height/2, green);                    
+                    skip_filling=true;
+                }
+                
+                if (!array_of_rooms[x][y][z]->get_is_connected(*this, room::direction_type::NORTH))
+                    i.line(x*mp.room_width, y*mp.room_height, 
+                       x*mp.room_width+mp.room_width-1, y*mp.room_height,black);
+                
+                if (!array_of_rooms[x][y][z]->get_is_connected(*this, room::direction_type::WEST))
+                    i.line(x*mp.room_width, y*mp.room_height,
+                       x*mp.room_width, y*mp.room_height+mp.room_height-1, black);
+                
+                if (!array_of_rooms[x][y][z]->get_is_connected(*this, room::direction_type::SOUTH))
+                    i.line(x*mp.room_width, y*mp.room_height+mp.room_height-1, 
+                       x*mp.room_width+mp.room_width-1, y*mp.room_height+mp.room_height-1,black);
+                    
+                if (!array_of_rooms[x][y][z]->get_is_connected(*this, room::direction_type::EAST))
+                    i.line(x*mp.room_width+mp.room_width-1, y*mp.room_height,
+                       x*mp.room_width+mp.room_width-1, y*mp.room_height+mp.room_height-1, black);
+                
+                if (array_of_rooms[x][y][z]->get_is_seed_room())
+                {
+                    if (!skip_filling)
+                        i.fill_ellipse(x*mp.room_width+mp.room_width/2,y*mp.room_height+mp.room_height/2,mp.room_width/2,mp.room_height/2, red);                    
+                    i.print_string(x*mp.room_width+mp.room_width/2-10,y*mp.room_height+mp.room_height/2-10, array_of_rooms[x][y][z]->get_name(), black);
+                    
+                }
+                
+                for (auto & d: array_of_rooms[x][y][z]->get_list_of_door())
+                {
+                    i.fill_ellipse((x+d->get_target_room().get_x())*mp.room_width/2+mp.room_width/2,(y+d->get_target_room().get_y())*mp.room_height/2+mp.room_height/2, mp.room_width/2,mp.room_height/2, blue);
+                    i.print_string(x*mp.room_width+mp.room_width/2-10,y*mp.room_height+mp.room_height/2-10, array_of_rooms[x][y][z]->get_name(), black);
+                }
+                
+            }
+        }
+        
+        
+        FILE * pngout=nullptr;
+        
+        std::stringstream map_name_stream;
+        
+        map_name_stream << prefix << "_" << z << "_" << p << ".png";
+        
+        pngout = fopen(map_name_stream.str().c_str(), "wb");
+        gdImagePng(i.get_image_pointer(), pngout);
+        fclose(pngout);
+    }
+}
+
+
+void skarabeusz::maze::create_maps_latex(const map_parameters & mp, const std::string & prefix)
 {
     for (unsigned z=0; z<max_z_range; z++)
     {
@@ -2487,9 +2613,7 @@ void skarabeusz::maze::create_maps(const map_parameters & mp, const std::string 
                 
             }
             
-        }
-
-        
+        }        
         
         
         FILE * pngout=nullptr;
@@ -2512,9 +2636,35 @@ int main(int argc, char * argv[])
         
     unsigned x_range=10,y_range=7,z_range=1,amount_of_chambers=5,max_amount_of_keys_to_hold=2,amount_of_alternative_endings=1;
     std::string prefix = "map";
+    enum class output_type { HTML, LATEX } output = output_type::LATEX;
     
     for (unsigned i=1; i<argc; i++)
     {
+        if (!strcmp(argv[i], "-v"))
+        {
+            std::cout << "skarabeusz " << PACKAGE_VERSION << "\n";
+            exit(0);
+        }
+        else
+        if (!strcmp(argv[i], "-o"))
+        {
+            i++;
+            if (!strcmp(argv[i], "latex"))
+            {
+                output = output_type::LATEX;
+            }
+            else
+            if (!strcmp(argv[i], "html"))
+            {
+                output = output_type::HTML;
+            }
+            else
+            {
+                std::cerr << "unsupported output " << argv[i] << "\n";
+                exit(-1);
+            }
+        }
+        else
         if (!strcmp(argv[i], "-x"))
         {
             x_range = atoi(argv[++i]);
@@ -2570,8 +2720,21 @@ int main(int argc, char * argv[])
     
     skarabeusz::map_parameters mp{80,80};
     
-    m.create_maps(mp, prefix);
-    m.create_latex(prefix);
+    
+    switch (output)
+    {
+        case output_type::LATEX:
+            m.create_maps_latex(mp, prefix);
+            m.create_latex(prefix);
+            break;
+            
+        case output_type::HTML:
+            m.create_maps_html(mp, prefix);
+            m.create_html(prefix);
+            break;
+            
+        default:;
+    }
     
     return 0;
 }

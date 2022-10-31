@@ -11,7 +11,7 @@
 GETTEXT_MACRO_VERSION = 0.20
 
 PACKAGE = skarabeusz
-VERSION = 0.0.0
+VERSION = 0.0.1
 PACKAGE_BUGREPORT = pawel.f.biernacki@gmail.com
 
 SED = /usr/bin/sed
@@ -292,7 +292,7 @@ $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
 	      --files-from=$(srcdir)/POTFILES.in \
 	      --copyright-holder='$(COPYRIGHT_HOLDER)' \
 	      --package-name="$${package_prefix}skarabeusz" \
-	      --package-version='0.0.0' \
+	      --package-version='0.0.1' \
 	      --msgid-bugs-address="$$msgid_bugs_address" \
 	      $(XGETTEXT_OPTIONS)  \
 	    ;; \
