@@ -61,8 +61,19 @@ namespace skarabeusz
     public:
         image(unsigned width, unsigned height)
         {
-            i = gdImageCreate(width, height);
+            i = gdImageCreateTrueColor(width, height);
+            int white = gdImageColorAllocate (i, 255, 255, 255);
+            gdImageFilledRectangle (i, 0, 0, gdImageSX (i), gdImageSY (i), white);
         }
+        image(const std::string & filename)
+        {
+            i = gdImageCreateFromFile(filename.c_str());
+            if (!i)
+            {
+                throw std::runtime_error("could not open file");
+            }
+        }        
+        
         gdImagePtr get_image_pointer() { return i; }
         
         int allocate_color(unsigned r, unsigned g, unsigned b)
@@ -84,6 +95,13 @@ namespace skarabeusz
         {
             gdImageString(i, gdFontGetGiant(), x, y, (unsigned char*)s.c_str(), c);
         }
+        
+        void copy(const image & other, int dstX, int dstY, int width, int height)
+        {
+            gdImageCopy(i, other.i, dstX, dstY, 0, 0, width, height);
+        }
+        
+        
         virtual ~image()
         {
             gdImageDestroy(i);
@@ -384,6 +402,51 @@ namespace skarabeusz
         paragraph_type get_type() const { return type; }
     };
 
+    class resource
+    {
+    private:
+        const std::string name;
+    public:
+        resource(const std::string & n): name{n} {}
+        std::string get_name() const { return name; }
+        virtual ~resource() {}
+    };
+    
+    class resource_image: public resource
+    {
+    private:
+        image my_image;
+    public:
+        resource_image(const std::string & n, const std::string & filename): resource{n}, my_image{filename} {}
+        
+        const image& get_image() const { return my_image; }
+    };
+    
+    class resources
+    {
+    private:
+        std::vector<std::unique_ptr<resource>> vector_of_resources;
+        
+        std::map<std::string, int> map_resource_name_to_index;
+        
+    public:
+        void add_resource(std::unique_ptr<resource> && r) 
+        { 
+            map_resource_name_to_index.insert(std::pair(r->get_name(), vector_of_resources.size()));
+            vector_of_resources.push_back(std::move(r)); 
+        }
+        
+        const resource_image& get_resource_image(const std::string & n) const
+        {
+            if (map_resource_name_to_index.find(n) == map_resource_name_to_index.end())
+            {
+                throw std::runtime_error("could not find the resource");
+            }
+            
+            const resource_image& ri{dynamic_cast<resource_image&>(*vector_of_resources[map_resource_name_to_index.at(n)])};
+            return ri;
+        }
+    };
     
     class maze
     {
@@ -444,7 +507,7 @@ namespace skarabeusz
         void create_latex(const std::string & prefix);
         
         void create_maps_latex(const map_parameters & mp, const std::string & prefix);
-        void create_maps_html(const map_parameters & mp, const std::string & prefix);
+        void create_maps_html(const map_parameters & mp, const std::string & prefix, const resources & r);
         
         void choose_seed_rooms(generator & g);
         
@@ -481,6 +544,9 @@ namespace skarabeusz
         
         const door_object & get_door_object(unsigned chamber1, unsigned chamber2) const;
     };
+    
+    
+    
     
     class generator
     {

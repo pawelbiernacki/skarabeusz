@@ -2544,9 +2544,12 @@ bool skarabeusz::room::get_is_connected(const maze & m, direction_type t) const
 }
 
 
-void skarabeusz::maze::create_maps_html(const map_parameters & mp, const std::string & prefix)
+void skarabeusz::maze::create_maps_html(const map_parameters & mp, const std::string & prefix, const resources & r)
 {
     unsigned z=0;
+    const auto & figdwarf{r.get_resource_image("figure_dwarf")};
+    const auto & fighero{r.get_resource_image("figure_hero")};
+    
     
     for (unsigned p=0; p<amount_of_paragraphs; p++)
     {
@@ -2564,13 +2567,7 @@ void skarabeusz::maze::create_maps_html(const map_parameters & mp, const std::st
             for (unsigned y=0; y<max_y_range; y++)
             {
                 bool skip_filling = false;
-                
-                if (x == vector_of_paragraphs[p]->get_x() && y == vector_of_paragraphs[p]->get_y())
-                {
-                    i.fill_ellipse(x*mp.room_width+mp.room_width/2,y*mp.room_height+mp.room_height/2,mp.room_width/2,mp.room_height/2, green);                    
-                    skip_filling=true;
-                }
-                
+
                 if (!array_of_rooms[x][y][z]->get_is_connected(*this, room::direction_type::NORTH))
                     i.line(x*mp.room_width, y*mp.room_height, 
                        x*mp.room_width+mp.room_width-1, y*mp.room_height,black);
@@ -2587,19 +2584,30 @@ void skarabeusz::maze::create_maps_html(const map_parameters & mp, const std::st
                     i.line(x*mp.room_width+mp.room_width-1, y*mp.room_height,
                        x*mp.room_width+mp.room_width-1, y*mp.room_height+mp.room_height-1, black);
                 
-                if (array_of_rooms[x][y][z]->get_is_seed_room())
-                {
-                    if (!skip_filling)
-                        i.fill_ellipse(x*mp.room_width+mp.room_width/2,y*mp.room_height+mp.room_height/2,mp.room_width/2,mp.room_height/2, red);                    
-                    i.print_string(x*mp.room_width+mp.room_width/2-10,y*mp.room_height+mp.room_height/2-10, array_of_rooms[x][y][z]->get_name(), black);
-                    
-                }
-                
                 for (auto & d: array_of_rooms[x][y][z]->get_list_of_door())
                 {
                     i.fill_ellipse((x+d->get_target_room().get_x())*mp.room_width/2+mp.room_width/2,(y+d->get_target_room().get_y())*mp.room_height/2+mp.room_height/2, mp.room_width/2,mp.room_height/2, blue);
                     i.print_string(x*mp.room_width+mp.room_width/2-10,y*mp.room_height+mp.room_height/2-10, array_of_rooms[x][y][z]->get_name(), black);
                 }
+                
+                if (x == vector_of_paragraphs[p]->get_x() && y == vector_of_paragraphs[p]->get_y())
+                {
+                    //i.fill_ellipse(x*mp.room_width+mp.room_width/2,y*mp.room_height+mp.room_height/2,mp.room_width/2,mp.room_height/2, green);                    
+                    i.copy(fighero.get_image(), x*mp.room_width,y*mp.room_height, mp.room_width, mp.room_height);                                                                        
+                    skip_filling=true;
+                }
+                                
+                if (array_of_rooms[x][y][z]->get_is_seed_room())
+                {
+                    if (!skip_filling)
+                    {
+                        //i.fill_ellipse(x*mp.room_width+mp.room_width/2,y*mp.room_height+mp.room_height/2,mp.room_width/2,mp.room_height/2, red);                    
+                        i.copy(figdwarf.get_image(), x*mp.room_width,y*mp.room_height, mp.room_width, mp.room_height);                                                                        
+                    }
+                    i.print_string(x*mp.room_width+mp.room_width/2-10,y*mp.room_height+mp.room_height/2-10, array_of_rooms[x][y][z]->get_name(), black);
+                    
+                }
+                
                 
             }
         }
@@ -2690,6 +2698,8 @@ int main(int argc, char * argv[])
     std::string html_head_filename="";
     enum class output_type { HTML, LATEX } output = output_type::LATEX;
     
+    skarabeusz::resources r;
+    
     for (unsigned i=1; i<argc; i++)
     {
         if (!strcmp(argv[i], "-v"))
@@ -2776,7 +2786,8 @@ int main(int argc, char * argv[])
     g.run();    
     
     skarabeusz::map_parameters mp{80,80};
-    
+    r.add_resource(std::make_unique<skarabeusz::resource_image>("figure_dwarf", "/usr/local/share/skarabeusz/figure_dwarf.png"));
+    r.add_resource(std::make_unique<skarabeusz::resource_image>("figure_hero", "/usr/local/share/skarabeusz/figure_hero.png"));        
     
     switch (output)
     {
@@ -2786,7 +2797,7 @@ int main(int argc, char * argv[])
             break;
             
         case output_type::HTML:
-            m.create_maps_html(mp, prefix);
+            m.create_maps_html(mp, prefix, r);
             m.create_html(prefix, html_head_filename);
             break;
             
