@@ -608,17 +608,23 @@ std::string skarabeusz::maze::get_keys_description_after_exchange(const keys & k
     else
     {
         number=0;
+        std::vector<std::string> vector_of_two_names; // it is hardcoded, max amount of keys must not be greater than 2
+                
+        
         for (unsigned i=0; i<amount_of_chambers; i++)
         {
             for (unsigned j=i+1; j<amount_of_chambers; j++)
             {
-                if (k.get_matrix()[i][j]) { s << get_door_object(i+1,j+1).get_key_name() << " "; }
+                if (k.get_matrix()[i][j]) { vector_of_two_names.push_back(get_door_object(i+1,j+1).get_key_name()); }
                 number++;
             }
         }
+        
+        char buffer0[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+        snprintf(buffer0, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("%s and %s"), vector_of_two_names[0].c_str(), vector_of_two_names[1].c_str());
 
         char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
-        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("The dwarf says: \"I would give you the keys %s for your keys.\""), s.str().c_str());
+        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("The dwarf says: \"I would give you the keys %s for your keys.\""), buffer0);
         result << buffer;
     }
     
@@ -652,17 +658,21 @@ std::string skarabeusz::maze::get_keys_description(const keys & k) const
     else
     {
         number=0;
+        std::vector<std::string> vector_of_two_names; // it is hardcoded, max amount of keys must not be greater than 2
         
         for (unsigned i=0; i<amount_of_chambers; i++)
         {
             for (unsigned j=i+1; j<amount_of_chambers; j++)
             {
-                if (k.get_matrix()[i][j]) { s << get_door_object(i+1,j+1).get_key_name() << " "; }
+                if (k.get_matrix()[i][j]) { vector_of_two_names.push_back(get_door_object(i+1,j+1).get_key_name()); }
                 number++;
             }
         }
+        char buffer0[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+        snprintf(buffer0, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("%s and %s"), vector_of_two_names[0].c_str(), vector_of_two_names[1].c_str());
+        
         char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
-        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You have the keys %s."), s.str().c_str());
+        snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You have the keys %s."), buffer0);
         result << buffer;
     }
     return result.str();
