@@ -212,7 +212,7 @@ void skarabeusz::paragraph::print_html(std::ostream & s) const
 {
     s << "<h3>" << get_number() << "</h3>\n";
     
-    s << "<img src=\"map_" << z << "_" << (get_number()-1) << ".png\">\n<br/>\n";
+    s << "<img src=\"map_" << z << "_" << (get_number()-1) << ".png\"><img class=\"compass\" src=\"compass.png\">\n<br/>\n";
     
     s << "<div class=\"skarabeusz\">\n";
     
@@ -2175,6 +2175,36 @@ void skarabeusz::hyperlink::print_latex(std::ostream & s) const
     s << "\\hyperlink{par " << my_paragraph.get_number() << "}{" << my_paragraph.get_number() << "}"; 
 }
 
+void skarabeusz::maze::create_html_index(const std::string & prefix, const std::string & html_head)
+{
+    std::ofstream file_stream("index.html");
+    std::stringstream teleport_code_stream;
+    
+    file_stream 
+        << "<!DOCTYPE html>\n" << html_head
+        << "<body>\n"
+        << "<script language=\"JavaScript\">\n"
+        << "function teleport(m)\n"
+        << "{\n"
+        << "var i=Math.floor(Math.random()*(m-1))+1;\n"
+        << "window.location=\"" << prefix << "_\"+ i + \".html\";\n" 
+        << "return 0;\n"
+        << "}\n"
+        << "</script>\n";
+    
+        
+    teleport_code_stream << "<button onclick=\"teleport(" << amount_of_paragraphs << ")\">" << _("teleport") << "</button>";
+        
+        
+    char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+    snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("Hello! Press %s in order to enter the maze."), teleport_code_stream.str().c_str());
+    file_stream << buffer;
+                
+    file_stream
+        << "</body>\n"
+        << "</html>\n";
+}
+
 void skarabeusz::maze::create_html(const std::string & prefix, const std::string & html_head_file)
 {
     std::stringstream html_head_stringstream;
@@ -2188,6 +2218,7 @@ void skarabeusz::maze::create_html(const std::string & prefix, const std::string
         }
     }
     
+    create_html_index(prefix, html_head_stringstream.str());
     
     for (unsigned z=0; z<amount_of_paragraphs; z++)
     {

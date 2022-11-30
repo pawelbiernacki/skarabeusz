@@ -7266,7 +7266,7 @@ $as_echo "yes" >&6; }
 fi
 
 
-ac_config_files="$ac_config_files Makefile po/Makefile.in example/Makefile inc/Makefile src/Makefile"
+ac_config_files="$ac_config_files Makefile po/Makefile.in example/Makefile image/Makefile inc/Makefile src/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -8009,6 +8009,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "po/Makefile.in") CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
     "example/Makefile") CONFIG_FILES="$CONFIG_FILES example/Makefile" ;;
+    "image/Makefile") CONFIG_FILES="$CONFIG_FILES image/Makefile" ;;
     "inc/Makefile") CONFIG_FILES="$CONFIG_FILES inc/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
 

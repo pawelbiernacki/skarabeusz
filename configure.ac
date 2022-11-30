@@ -26,6 +26,7 @@ PKG_CHECK_MODULES([GD], [gdlib >= 2.2.5])
 
 AC_CONFIG_FILES([Makefile po/Makefile.in
                  example/Makefile
+                 image/Makefile
                  inc/Makefile
                  src/Makefile])
 AC_OUTPUT

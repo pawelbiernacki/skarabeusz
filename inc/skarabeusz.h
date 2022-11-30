@@ -440,6 +440,7 @@ namespace skarabeusz
         void create_chambers(unsigned aoc);
                 
         void create_html(const std::string & prefix, const std::string & html_head_file);        
+        void create_html_index(const std::string & prefix, const std::string & html_head);        
         void create_latex(const std::string & prefix);
         
         void create_maps_latex(const map_parameters & mp, const std::string & prefix);

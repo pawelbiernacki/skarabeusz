@@ -1,6 +1,6 @@
 
 
-SUBDIRS = po example inc src
+SUBDIRS = po image example inc src
 
 ACLOCAL_AMFLAGS = -I m4
 
