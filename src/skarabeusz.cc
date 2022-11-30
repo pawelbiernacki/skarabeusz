@@ -12,7 +12,7 @@
 
 #define SKARABEUSZ_MAX_MESSAGE_BUFFER 1000
 
-#define SKARABEUSZ_DEBUG
+//#define SKARABEUSZ_DEBUG
 
 #ifdef SKARABEUSZ_DEBUG
 #define DEBUG(X) std::cout << __LINE__ << ":" << X << "\n"
@@ -1261,10 +1261,19 @@ void skarabeusz::generator::process_a_journey(unsigned chamber1, keys & keys1, u
 
 void skarabeusz::generator::process_the_equivalence_classes()
 {
+    double e=list_of_processed_pairs_chamber_and_keys.size();
+    double f=e*e;
+    unsigned long f0=0l;
+    
+    
+    
 	for (std::list<std::pair<unsigned, keys>>::iterator i(list_of_processed_pairs_chamber_and_keys.begin()); i != list_of_processed_pairs_chamber_and_keys.end(); i++)
 	{
 		for (std::list<std::pair<unsigned, keys>>::iterator j(list_of_processed_pairs_chamber_and_keys.begin()); j != list_of_processed_pairs_chamber_and_keys.end(); j++)
 		{
+            f0++;
+            std::cout << "done " << f0 << " all " << f << "\n";
+            
 			if ((*i).first != (*j).first)
 			{
 				// if there is a direct connection between the chambers
