@@ -160,9 +160,9 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(locale_pldir)" \
-	"$(DESTDIR)$(locale_rudir)"
-DATA = $(locale_pl_DATA) $(locale_ru_DATA)
+am__installdirs = "$(DESTDIR)$(locale_fidir)" \
+	"$(DESTDIR)$(locale_pldir)" "$(DESTDIR)$(locale_rudir)"
+DATA = $(locale_fi_DATA) $(locale_pl_DATA) $(locale_ru_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 am__recursive_targets = \
@@ -367,8 +367,10 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = m4/ChangeLog
 locale_pldir = ${localedir}/pl/LC_MESSAGES
 locale_rudir = ${localedir}/ru/LC_MESSAGES
+locale_fidir = ${localedir}/fi/LC_MESSAGES
 locale_pl_DATA = po/pl/skarabeusz.mo 
 locale_ru_DATA = po/ru/skarabeusz.mo
+locale_fi_DATA = po/fi/skarabeusz.mo
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -421,6 +423,27 @@ $(srcdir)/config.h.in:  $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
+install-locale_fiDATA: $(locale_fi_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(locale_fi_DATA)'; test -n "$(locale_fidir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(locale_fidir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(locale_fidir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(locale_fidir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(locale_fidir)" || exit $$?; \
+	done
+
+uninstall-locale_fiDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(locale_fi_DATA)'; test -n "$(locale_fidir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(locale_fidir)'; $(am__uninstall_files_from_dir)
 install-locale_plDATA: $(locale_pl_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(locale_pl_DATA)'; test -n "$(locale_pldir)" || list=; \
@@ -766,7 +789,7 @@ check: check-recursive
 all-am: Makefile $(DATA) config.h
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(locale_pldir)" "$(DESTDIR)$(locale_rudir)"; do \
+	for dir in "$(DESTDIR)$(locale_fidir)" "$(DESTDIR)$(locale_pldir)" "$(DESTDIR)$(locale_rudir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -820,7 +843,8 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-locale_plDATA install-locale_ruDATA
+install-data-am: install-locale_fiDATA install-locale_plDATA \
+	install-locale_ruDATA
 
 install-dvi: install-dvi-recursive
 
@@ -866,7 +890,8 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-locale_plDATA uninstall-locale_ruDATA
+uninstall-am: uninstall-locale_fiDATA uninstall-locale_plDATA \
+	uninstall-locale_ruDATA
 
 .MAKE: $(am__recursive_targets) all install-am install-strip
 
@@ -879,12 +904,13 @@ uninstall-am: uninstall-locale_plDATA uninstall-locale_ruDATA
 	dvi-am html html-am info info-am install install-am \
 	install-data install-data-am install-dvi install-dvi-am \
 	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-locale_plDATA \
-	install-locale_ruDATA install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am tags tags-am uninstall uninstall-am \
+	install-info install-info-am install-locale_fiDATA \
+	install-locale_plDATA install-locale_ruDATA install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am tags \
+	tags-am uninstall uninstall-am uninstall-locale_fiDATA \
 	uninstall-locale_plDATA uninstall-locale_ruDATA
 
 .PRECIOUS: Makefile
@@ -912,6 +938,16 @@ russian-update:
 russian-mo:
 	msgfmt --output-file=po/ru/skarabeusz.mo po/ru/skarabeusz.po; \
 	cp po/ru/skarabeusz.po po/ru.po
+
+finnish-po:
+	msginit --input=po/skarabeusz.pot --locale=fi --output=po/fi/skarabeusz.po
+
+finnish-update:
+	msgmerge --update po/fi/skarabeusz.po po/skarabeusz.pot	
+
+finnish-mo:
+	msgfmt --output-file=po/fi/skarabeusz.mo po/fi/skarabeusz.po; \
+	cp po/fi/skarabeusz.po po/fi.po
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

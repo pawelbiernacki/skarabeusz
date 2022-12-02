@@ -1,0 +1,464 @@
+# Finnish translations for skarabeusz package.
+# Copyright (C) 2022 THE skarabeusz'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the skarabeusz package.
+# Pawel Biernacki <pawel.f.biernacki@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: skarabeusz 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-11-30 23:08+0200\n"
+"PO-Revision-Date: 2022-12-02 21:18+0200\n"
+"Last-Translator: Pawel Biernacki <pawel.f.biernacki@gmail.com>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/skarabeusz.cc:624 src/skarabeusz.cc:672
+#, c-format
+msgid "%s and %s"
+msgstr "%s ja %s"
+
+#: src/skarabeusz.cc:308
+#, c-format
+msgid "Apart from you there is a dwarf at %s here."
+msgstr "Paitsi sinuä tällä (%s) on myös kääpiö."
+
+#: src/skarabeusz.cc:1021
+msgid "Congratulations! You have won!"
+msgstr "Onneksi olkoon! Sinä voitit!"
+
+#: src/skarabeusz.cc:887
+#, c-format
+msgid "Go to the field %s - "
+msgstr "Mene kentälle %s - "
+
+#: src/skarabeusz.cc:2219
+#, c-format
+msgid "Hello! Press %s in order to enter the maze."
+msgstr "Tervetuloa! Paine %s päästäkseen sokkeloon."
+
+#: src/skarabeusz.cc:1015
+msgid "Hello, my name is "
+msgstr "Terve, minun nimi on "
+
+#: src/skarabeusz.cc:1035
+msgid "If you accept it go to "
+msgstr "Jos hyväksyt se mene "
+
+#: src/skarabeusz.cc:928
+msgid "None of your keys opens the east door."
+msgstr "Mikään avaimistasi ei avaa itäovea."
+
+#: src/skarabeusz.cc:976
+msgid "None of your keys opens the hatch in the ceiling."
+msgstr "Mikään avaimistasi ei avaa katossa olevaa luukkua."
+
+#: src/skarabeusz.cc:964
+msgid "None of your keys opens the hatch in the floor."
+msgstr "Mikään avaimistasi ei avaa lattiassa olevaa luukkua."
+
+#: src/skarabeusz.cc:916
+msgid "None of your keys opens the north door."
+msgstr "Mikään avaimistasi ei avaa pohjoisovea."
+
+#: src/skarabeusz.cc:940
+msgid "None of your keys opens the south door."
+msgstr "Mikään avaimistasi ei avaa eteläovea."
+
+#: src/skarabeusz.cc:952
+msgid "None of your keys opens the west door."
+msgstr "Mikään avaimistasi ei avaa länsiovea."
+
+#: src/skarabeusz.cc:861
+msgid "Talk with the dwarf - go to "
+msgstr "Puhu kääpiön kanssa - mene "
+
+#: src/skarabeusz.cc:1043
+msgid "The dwarf does not accept any exchange."
+msgstr "Kääpiö ei hyväksy vaihtoa."
+
+#: src/skarabeusz.cc:696
+msgid "The dwarf pays no attention at you."
+msgstr "Kääpiö ei kiinnitä sinuun huomiota."
+
+#: src/skarabeusz.cc:605
+#, c-format
+msgid "The dwarf says: \"I would give you the %s key for your keys.\""
+msgstr "Kääpiö sanoo: \"Antaisin sinulle %s avaimen avaimillesi.\""
+
+#: src/skarabeusz.cc:627
+#, c-format
+msgid "The dwarf says: \"I would give you the keys %s for your keys.\""
+msgstr "Kääpiö sanoo: \"Antaisin sinulle avaimet %s avaimillesi.\""
+
+#: src/skarabeusz.cc:397
+#, c-format
+msgid "There are %i door in the eastern wall."
+msgid_plural "There are %i door in the eastern wall."
+msgstr[0] "Itäseinässä on %i ovea."
+msgstr[1] "Itäseinässä on %i ovea."
+
+#: src/skarabeusz.cc:364
+#, c-format
+msgid "There are %i door in the northern wall."
+msgid_plural "There are %i door in the northern wall."
+msgstr[0] "Pohjoisseinässä on %i ovea."
+msgstr[1] "Pohjoisseinässä on %i ovea."
+
+#: src/skarabeusz.cc:430
+#, c-format
+msgid "There are %i door in the southern wall."
+msgid_plural "There are %i door in the southern wall."
+msgstr[0] "Eteläseinässä on %i ovea."
+msgstr[1] "Eteläseinässä on %i ovea."
+
+#: src/skarabeusz.cc:462
+#, c-format
+msgid "There are %i door in the western wall."
+msgid_plural "There are %i door in the western wall."
+msgstr[0] "Länsseinässä on %i ovea."
+msgstr[1] "Länsseinässä on %i ovea."
+
+#: src/skarabeusz.cc:497
+#, c-format
+msgid "There is %i hatch in the ceiling."
+msgid_plural "There are %i hatches in the ceiling."
+msgstr[0] "Katossa on %i luukku."
+msgstr[1] "Katossa on %i luukkua."
+
+#: src/skarabeusz.cc:536
+#, c-format
+msgid "There is %i hatch in the floor."
+msgid_plural "There are %i hatches in the floor."
+msgstr[0] "Lattiassa on %i luukku."
+msgstr[1] "Lattiassa on %i luukkua."
+
+#: src/skarabeusz.cc:391
+#, c-format
+msgid "There is a door %s in the eastern wall."
+msgstr "Itäseinässä on ovi %s."
+
+#: src/skarabeusz.cc:358
+#, c-format
+msgid "There is a door %s in the northern wall."
+msgstr "Pohjoisseinässä on ovi %s."
+
+#: src/skarabeusz.cc:424
+#, c-format
+msgid "There is a door %s in the southern wall."
+msgstr "Eteläseinässä on ovi %s."
+
+#: src/skarabeusz.cc:456
+#, c-format
+msgid "There is a door %s in the western wall."
+msgstr "Länsseinässä on ovi %s."
+
+#: src/skarabeusz.cc:491
+#, c-format
+msgid "There is a hatch %s in the ceiling."
+msgstr "Katossa on luukku %s."
+
+#: src/skarabeusz.cc:530
+#, c-format
+msgid "There is a hatch %s in the floor."
+msgstr "Lattiassa on luukku %s."
+
+#: src/skarabeusz.cc:2167
+#, c-format
+msgid "This is a map of the level %i."
+msgstr "Tämä on kartta tasosta %i."
+
+#: src/skarabeusz.cc:860
+msgid "What do you want to do?"
+msgstr "Mitä haluat tehdä?"
+
+#: src/skarabeusz.cc:268
+msgid "You are standing in a corridor leading from east to west."
+msgstr "Seisot käytävällä, joka johtaa idästä länteen."
+
+#: src/skarabeusz.cc:263
+msgid "You are standing in a corridor leading from north to south."
+msgstr "Seisot käytävällä, joka johtaa pohjoisesta etelään."
+
+#: src/skarabeusz.cc:290
+msgid "You are standing in a large room."
+msgstr "Seisot suuressa huoneessa."
+
+#: src/skarabeusz.cc:286
+msgid "You are standing in a large square room."
+msgstr "Seisot suuressa neliöhuoneessa."
+
+#: src/skarabeusz.cc:258 src/skarabeusz.cc:279
+msgid "You are standing in a small room."
+msgstr "Seisot pienessä huoneessa."
+
+#: src/skarabeusz.cc:275
+msgid "You are standing in a small square room."
+msgstr "Seisot pienessä neliöhuoneessa."
+
+#: src/skarabeusz.cc:893
+#, c-format
+msgid "You are standing in front of the door at %s - "
+msgstr "Seisot oven edessä %s-lla "
+
+#: src/skarabeusz.cc:1008
+#, c-format
+msgid "You are standing next to the dwarf at %s."
+msgstr "Seisot kääpiön vieressä %s-lla."
+
+#: src/skarabeusz.cc:706
+#, c-format
+msgid "You are talking with the dwarf at %s."
+msgstr "Puhut kääpiön kanssa %s-lla."
+
+#: src/skarabeusz.cc:983 src/skarabeusz.cc:1047
+msgid "You can look around "
+msgstr "Voit katsoa ympärillesi "
+
+#: src/skarabeusz.cc:922
+#, c-format
+msgid "You can open the door %s and go east "
+msgstr "Voit avata oven %s ja mennä itään "
+
+#: src/skarabeusz.cc:910
+#, c-format
+msgid "You can open the door %s and go north "
+msgstr "Voit avata oven %s ja mennä pohjoiseen "
+
+#: src/skarabeusz.cc:934
+#, c-format
+msgid "You can open the door %s and go south "
+msgstr "Voit avata oven %s ja mennä etelään "
+
+#: src/skarabeusz.cc:946
+#, c-format
+msgid "You can open the door %s and go west "
+msgstr "Voit avata oven %s ja mennä länteen "
+
+#: src/skarabeusz.cc:970
+#, c-format
+msgid "You can open the hatch %s and ascend to the upper level "
+msgstr "Voit avata luukun %s ja nousta ylemmälle tasolle "
+
+#: src/skarabeusz.cc:958
+#, c-format
+msgid "You can open the hatch %s and descend to the lower level "
+msgstr "Voit avata luukun %s ja laskeutua alemmalle tasolle "
+
+#: src/skarabeusz.cc:655
+#, c-format
+msgid "You have the %s key."
+msgstr "Sinulla on %s avain."
+
+#: src/skarabeusz.cc:675
+#, c-format
+msgid "You have the keys %s."
+msgstr "Sinulla on avaimet %s."
+
+#: src/skarabeusz.cc:123
+msgid "black"
+msgstr "musta"
+
+#: src/skarabeusz.cc:126
+msgid "blue"
+msgstr "sininen"
+
+#: src/skarabeusz.cc:132
+msgid "brown"
+msgstr "ruskea"
+
+#: src/skarabeusz.cc:140
+msgid "burgundy"
+msgstr "viininpunainen"
+
+#: src/skarabeusz.cc:139
+msgid "coral"
+msgstr "korallinen"
+
+#: src/skarabeusz.cc:138
+msgid "cream"
+msgstr "kermainen"
+
+#: src/skarabeusz.cc:144
+msgid "cyan"
+msgstr "syaani"
+
+#: src/skarabeusz.cc:128
+msgid "diamond"
+msgstr "timantti"
+
+#: src/skarabeusz.cc:130
+msgid "golden"
+msgstr "kulta"
+
+#: src/skarabeusz.cc:133
+msgid "gray"
+msgstr "harmaa"
+
+#: src/skarabeusz.cc:125
+msgid "green"
+msgstr "vihreä"
+
+#: src/skarabeusz.cc:137
+msgid "magenta"
+msgstr "magenta"
+
+#: src/skarabeusz.cc:135
+msgid "maroon"
+msgstr "kastanjanruskea"
+
+#: src/skarabeusz.cc:134
+msgid "olive"
+msgstr "oliivinvihreä"
+
+#: src/skarabeusz.cc:131
+msgid "orange"
+msgstr "oranssi"
+
+#: src/skarabeusz.cc:141
+msgid "peach"
+msgstr "persikka"
+
+#: src/skarabeusz.cc:143
+msgid "pink"
+msgstr "vaaleanpunainen"
+
+#: src/skarabeusz.cc:127
+msgid "purple"
+msgstr "violetti"
+
+#: src/skarabeusz.cc:121
+msgid "red"
+msgstr "punainen"
+
+#: src/skarabeusz.cc:142
+msgid "rust"
+msgstr "ruoste"
+
+#: src/skarabeusz.cc:145
+msgid "scarlet"
+msgstr "helakanpunainen"
+
+#: src/skarabeusz.cc:129
+msgid "silver"
+msgstr "hopea"
+
+#: src/skarabeusz.cc:2215
+msgid "teleport"
+msgstr "teleportti"
+
+#: src/skarabeusz.cc:136
+msgid "violet"
+msgstr "orvokki"
+
+#: src/skarabeusz.cc:122
+msgid "white"
+msgstr "valkoinen"
+
+#: src/skarabeusz.cc:93
+msgid "with the black key"
+msgstr "mustalla avaimella"
+
+#: src/skarabeusz.cc:96
+msgid "with the blue key"
+msgstr "sinisellä avaimella"
+
+#: src/skarabeusz.cc:102
+msgid "with the brown key"
+msgstr "ruskealla avaimella"
+
+#: src/skarabeusz.cc:110
+msgid "with the burgundy key"
+msgstr "viininpunaisella avaimella"
+
+#: src/skarabeusz.cc:109
+msgid "with the coral key"
+msgstr "koralliavaimella"
+
+#: src/skarabeusz.cc:108
+msgid "with the cream key"
+msgstr "kermaavaimella"
+
+#: src/skarabeusz.cc:114
+msgid "with the cyan key"
+msgstr "syaanin avaimella"
+
+#: src/skarabeusz.cc:98
+msgid "with the diamond key"
+msgstr "timanttiavaimella"
+
+#: src/skarabeusz.cc:100
+msgid "with the golden key"
+msgstr "kultaisella avaimella"
+
+#: src/skarabeusz.cc:103
+msgid "with the gray key"
+msgstr "harmaalla avaimella"
+
+#: src/skarabeusz.cc:95
+msgid "with the green key"
+msgstr "vihreällä avaimella"
+
+#: src/skarabeusz.cc:107
+msgid "with the magenta key"
+msgstr "magenta-avaimella"
+
+#: src/skarabeusz.cc:105
+msgid "with the maroon key"
+msgstr "kastanjanruskealla avaimella"
+
+#: src/skarabeusz.cc:104
+msgid "with the olive key"
+msgstr "oliiviavaimella"
+
+#: src/skarabeusz.cc:101
+msgid "with the orange key"
+msgstr "oranssilla avaimella"
+
+#: src/skarabeusz.cc:111
+msgid "with the peach key"
+msgstr "persikkanäppäimellä"
+
+#: src/skarabeusz.cc:113
+msgid "with the pink key"
+msgstr "vaaleanpunaisella avaimella"
+
+#: src/skarabeusz.cc:97
+msgid "with the purple key"
+msgstr "violetilla avaimella"
+
+#: src/skarabeusz.cc:91
+msgid "with the red key"
+msgstr "punaisella avaimella"
+
+#: src/skarabeusz.cc:112
+msgid "with the rust key"
+msgstr "ruosteavaimella"
+
+#: src/skarabeusz.cc:115
+msgid "with the scarlet key"
+msgstr "helakanpunaisella avaimella"
+
+#: src/skarabeusz.cc:99
+msgid "with the silver key"
+msgstr "hopeisella avaimella"
+
+#: src/skarabeusz.cc:106
+msgid "with the violet key"
+msgstr "orvokilla avaimella´"
+
+#: src/skarabeusz.cc:92
+msgid "with the white key"
+msgstr "valkoisella avaimella"
+
+#: src/skarabeusz.cc:94
+msgid "with the yellow key"
+msgstr "keltaisella avaimella"
+
+#: src/skarabeusz.cc:124
+msgid "yellow"
+msgstr "keltainen"
