@@ -7,9 +7,7 @@ The amount of levels depends on the "z range". By default it is 1.
 
 Then you should compile the TEX file with the pdflatex tool. This will produce a PDF file that is the end result (a paragraph game).
 
-Skarabeusz currently supports English, Polish and Russian, depending on the LANG environment variable.
-
-Make LANG to be "pl_PL.UTF-8" to have an output in Polish.
+Skarabeusz currently supports English, Polish and Russian.
 
 Skarabeusz accepts the following options (in any order):
     -x <x_range>
@@ -19,6 +17,7 @@ Skarabeusz accepts the following options (in any order):
     -a <amount of alternative endings>
     -p <prefix>
     -o (html|latex)
+    -l (english|polish|russian)
     -v
 
 Running skarabeusz with no parameters at all works as:

@@ -2699,17 +2699,15 @@ void skarabeusz::maze::create_maps_latex(const map_parameters & mp, const std::s
 
 int main(int argc, char * argv[])
 {        
-    setlocale(LC_ALL, "");
-    bindtextdomain ("skarabeusz", LOCALEDIR);
-    textdomain("skarabeusz");    
-        
     unsigned x_range=10,y_range=7,z_range=1,amount_of_chambers=5,max_amount_of_keys_to_hold=2,amount_of_alternative_endings=1;
+
+    std::string language = "english";
     std::string prefix = "map";
     std::string html_head_filename="";
     enum class output_type { HTML, LATEX } output = output_type::LATEX;
-    
+
     skarabeusz::resources r;
-    
+
     for (unsigned i=1; i<argc; i++)
     {
         if (!strcmp(argv[i], "-v"))
@@ -2772,6 +2770,27 @@ int main(int argc, char * argv[])
             prefix = std::string(argv[++i]);
         }
         else
+        if (!strcmp(argv[i], "-l"))
+        {
+            language = std::string(argv[++i]);
+        }
+        else
+        if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help"))
+        {
+            std::cout << "skarabeusz supports following options:\n";
+            std::cout << "          -l (english|polish|russian) - select the language\n";
+            std::cout << "          -v                          - print the version\n";
+            std::cout << "          -o (latex|html)             - select the output mode\n";
+            std::cout << "          --head-file <filename>      - set the header file name\n";
+            std::cout << "          -x <value>                  - width of a maze floor\n";
+            std::cout << "          -y <value>                  - height of a maze floor\n";
+            std::cout << "          -z <value>                  - amount of maze floors\n";
+            std::cout << "          -c <value>                  - amount of chanbers\n";
+            std::cout << "          -a <value>                  - amount of alternative endings\n";
+            std::cout << "          -p <prefix>                 - output file prefix\n";
+            exit(0);
+        }
+        else
         {
             std::cerr << "unrecognized option " << argv[i] << "\n";
             exit(1);
@@ -2783,6 +2802,30 @@ int main(int argc, char * argv[])
         std::cerr << "The amount of chambers must be equal or greater than the <z range>\n";
         exit(1);
     }
+
+    if (language == "english")
+    {
+        setlocale(LC_ALL, "en_US.UTF-8");
+    }
+    else
+    if (language == "polish")
+    {
+        setlocale(LC_ALL, "pl_PL.UTF-8");
+    }
+    else
+    if (language == "russian")
+    {
+        setlocale(LC_ALL, "ru_RU.UTF-8");
+    }
+    else
+    {
+        std::cerr << "unsupported language " << language << "\n";
+        exit(1);
+    }
+
+    bindtextdomain ("skarabeusz", LOCALEDIR);
+    textdomain("skarabeusz");
+
     
     skarabeusz::generator_parameters gp{x_range,y_range,z_range, // x,y,z
                                         3, // max amount of magic items 
