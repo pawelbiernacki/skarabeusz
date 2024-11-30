@@ -6,6 +6,7 @@
 #include <memory>
 #include <list>
 #include <map>
+#include <limits>
 #include <gd.h>
 #include <gdfontg.h>
 
@@ -35,6 +36,7 @@ namespace skarabeusz
         
         unsigned amount_of_alternative_endings;
                 
+        bool hints;
     public:
         enum class output_mode_type { NONE=0x0, LATEX=0x1, HTML=0x2 };
         
@@ -43,13 +45,14 @@ namespace skarabeusz
     private:
         output_mode_type output_mode;
     public:
-        generator_parameters(unsigned xr, unsigned yr, unsigned zr, unsigned maomi, unsigned aoc, unsigned maokth, unsigned aoae):
+        generator_parameters(unsigned xr, unsigned yr, unsigned zr, unsigned maomi, unsigned aoc, unsigned maokth, unsigned aoae, bool h):
             maze_x_range(xr), maze_y_range(yr), maze_z_range(zr),
             max_amount_of_magic_items{maomi},
             amount_of_chambers{aoc},
             max_amount_of_keys_to_hold{maokth},            
             output_mode{output_mode_type::LATEX},
-            amount_of_alternative_endings{aoae}
+            amount_of_alternative_endings{aoae},
+            hints{h}
             {
             }
     };
@@ -150,6 +153,7 @@ namespace skarabeusz
     
     class door;
     class keys;
+    class door_object;
     
     class room
     {
@@ -187,6 +191,8 @@ namespace skarabeusz
         unsigned get_chamber_id() const { return chamber_id; }
         
         const std::list<std::shared_ptr<door>>& get_list_of_door() const { return list_of_door; }
+
+        bool get_has_door_object(door_object & d) const;
         
         void set_name(const std::string & n);
         
@@ -219,6 +225,11 @@ namespace skarabeusz
         const std::string & get_key_name() const { return key_name; }
         
         const std::string & get_with_the_key_name() const { return with_the_key_name; }
+
+        bool operator==(const door_object & d) const
+        {
+            return chamber1 == d.chamber1 && chamber2 == d.chamber2 && key_number == d.key_number;
+        }
     };
     
 
@@ -231,6 +242,7 @@ namespace skarabeusz
         
         door_object & my_object;
         
+        friend class generator;
     public:
         door(unsigned c1, unsigned c2, room & r, room::direction_type d, door_object & o): 
             chamber1{c1}, chamber2{c2}, target_room{r}, direction{d}, my_object{o} {}
@@ -311,6 +323,10 @@ namespace skarabeusz
         const std::vector<std::vector<bool>> & get_matrix() const { return matrix; }
     };
     
+    /**
+     * This class represents a unique player situation, i.e. where he is located
+     * and what keys he has.
+     */
     class chamber_and_keys
     {
     private:
@@ -331,6 +347,10 @@ namespace skarabeusz
         
         unsigned get_chamber_id() const { return chamber_id; }
 
+        bool operator==(const chamber_and_keys & c) const { return chamber_id == c.chamber_id && my_keys == c.my_keys; }
+
+        bool operator!=(const chamber_and_keys & c) const { return chamber_id != c.chamber_id || my_keys != c.my_keys; }
+
     };
     
     class paragraph_item
@@ -340,6 +360,8 @@ namespace skarabeusz
         
         virtual void print_latex(std::ostream & s) const = 0;
         virtual void print_html(std::ostream & s) const = 0;
+        virtual void print_text(std::ostream & s) const = 0;
+
     };
     
     
@@ -351,6 +373,7 @@ namespace skarabeusz
         normal_text(const std::string & t): text{t} {}
         virtual void print_latex(std::ostream & s) const override { s << text; }
         virtual void print_html(std::ostream & s) const override { s << text; }
+        virtual void print_text(std::ostream & s) const override { s << text; }
     };
     
     class paragraph;
@@ -363,27 +386,76 @@ namespace skarabeusz
         hyperlink(const paragraph & p): my_paragraph{p} {}
         virtual void print_latex(std::ostream & s) const override;
         virtual void print_html(std::ostream & s) const override;
+        virtual void print_text(std::ostream & s) const override;
+    };
+
+    class hint_you_still_need_i_steps: public paragraph_item
+    {
+    private:
+        const paragraph & my_paragraph;
+    public:
+        hint_you_still_need_i_steps(const paragraph & p): my_paragraph{p} {}
+        virtual void print_latex(std::ostream & s) const override;
+        virtual void print_html(std::ostream & s) const override;
+        virtual void print_text(std::ostream & s) const override;
     };
     
+
+    class paragraph_connection
+    {
+    friend class generator;
+    private:
+        paragraph &first, &second;
+        bool has_been_processed;
+    public:
+        paragraph_connection(paragraph & f, paragraph & s):
+            first{f}, second{s} {}
+
+        void set_has_been_processed(bool p)
+        {
+            has_been_processed = p;
+        }
+
+        bool get_has_been_processed() const { return has_been_processed; }
+
+        const paragraph & get_first() const { return first; }
+        const paragraph & get_second() const { return second; }
+    };
     
     class paragraph
     {
+    friend class generator;
+    friend class hint_you_still_need_i_steps;
     public:
         enum class paragraph_type { CHAMBER_DESCRIPTION, DISCUSSION, DOOR };
     private:
         bool ending;
+        int distance_to_the_closest_ending; // we may have many endings!
+        bool distance_has_been_calculated;
+
         unsigned number;        
         chamber_and_keys my_state;
         std::list<std::unique_ptr<paragraph_item>> list_of_paragraph_items;
         paragraph_type type;
         unsigned x,y,z;
     public:
-        //paragraph(unsigned n, const chamber_and_keys & c, paragraph_type t): number{n}, my_state{c}, type{t}, x{0}, y{0},z{0}, ending{false} {}
-        paragraph(unsigned n, const chamber_and_keys & c, unsigned nx, unsigned ny, unsigned nz, paragraph_type t): number{n}, my_state{c}, type{t}, x{nx}, y{ny},z{nz}, ending{false} {}
+        paragraph(unsigned n, const chamber_and_keys & c, unsigned nx, unsigned ny, unsigned nz, paragraph_type t);
+
+        bool get_distance_has_been_calculated() const { return distance_has_been_calculated; }
+
+        int get_distance_to_the_closest_ending() const { return distance_to_the_closest_ending; }
+
+        void set_distance_to_the_closest_ending(int d)
+        {
+            distance_to_the_closest_ending = d;
+            distance_has_been_calculated = true;
+        }
+
         void add(std::unique_ptr<paragraph_item> && i) { list_of_paragraph_items.push_back(std::move(i)); }
         
         void print_latex(std::ostream & s) const;        
         void print_html(std::ostream & s) const;
+        void print_text(std::ostream & s) const;
         
         chamber_and_keys& get_state() { return my_state; }
         
@@ -475,6 +547,8 @@ namespace skarabeusz
         std::vector<std::unique_ptr<paragraph>> vector_of_paragraphs;
         
         std::vector<std::unique_ptr<door_object>> vector_of_door_objects;
+
+        std::vector<std::unique_ptr<paragraph_connection>> vector_of_paragraph_connections;
         
         
     public:
@@ -519,6 +593,8 @@ namespace skarabeusz
         unsigned get_z2_of_chamber(unsigned id) const;
         
         bool get_can_be_assigned_to_chamber(unsigned x1, unsigned y1, unsigned z1, unsigned x2, unsigned y2, unsigned z2, unsigned id) const;
+
+        bool get_all_paragraph_connections_have_been_processed() const;
         
         void grow_chambers_in_all_directions(generator & g);
         
@@ -543,10 +619,20 @@ namespace skarabeusz
         door_object & get_door_object(unsigned chamber1, unsigned chamber2);
         
         const door_object & get_door_object(unsigned chamber1, unsigned chamber2) const;
+
+        paragraph& get_discussion_paragraph(chamber_and_keys & c);
+
+        paragraph& get_description_paragraph(chamber_and_keys & c);
+
+        paragraph& get_door_paragraph(chamber_and_keys & c, int index);
+
+        paragraph& get_door_paragraph(chamber_and_keys & c, door_object & d);
+
+        int get_amount_of_door_in_chamber(chamber_and_keys & c);
+
+        void report(std::ostream & s) const;
     };
-    
-    
-    
+
     
     class generator
     {
@@ -593,6 +679,7 @@ namespace skarabeusz
         bool get_all_pairs_have_been_done() const;
         void process_a_journey_get_candidate(unsigned & candidate_done, unsigned & candidate_not_done) const;
         void generate_paragraphs();
+        void calculate_min_distance_to_the_closest_ending();
         void generate_names();        
         std::string get_random_name();
         unsigned get_amount_of_pairs_that_have_been_done() const;
@@ -613,10 +700,10 @@ namespace skarabeusz
         std::mt19937 & get_random_number_generator() { return gen; }
                 
     };
-    
-    
-    
 }
+
+std::ostream& operator<<(std::ostream & s, const skarabeusz::paragraph_connection & pc);
+std::ostream& operator<<(std::ostream & s, const skarabeusz::paragraph & p);
 
 #endif
 

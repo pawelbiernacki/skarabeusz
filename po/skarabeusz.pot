@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: skarabeusz 0.0.1\n"
 "Report-Msgid-Bugs-To: pawel.f.biernacki@gmail.com\n"
-"POT-Creation-Date: 2024-11-29 20:01+0100\n"
+"POT-Creation-Date: 2024-11-30 02:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,453 +18,463 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/skarabeusz.cc:91
+#: src/skarabeusz.cc:275
 msgid "with the red key"
 msgstr ""
 
-#: src/skarabeusz.cc:92
+#: src/skarabeusz.cc:276
 msgid "with the white key"
 msgstr ""
 
-#: src/skarabeusz.cc:93
+#: src/skarabeusz.cc:277
 msgid "with the black key"
 msgstr ""
 
-#: src/skarabeusz.cc:94
+#: src/skarabeusz.cc:278
 msgid "with the yellow key"
 msgstr ""
 
-#: src/skarabeusz.cc:95
+#: src/skarabeusz.cc:279
 msgid "with the green key"
 msgstr ""
 
-#: src/skarabeusz.cc:96
+#: src/skarabeusz.cc:280
 msgid "with the blue key"
 msgstr ""
 
-#: src/skarabeusz.cc:97
+#: src/skarabeusz.cc:281
 msgid "with the purple key"
 msgstr ""
 
-#: src/skarabeusz.cc:98
+#: src/skarabeusz.cc:282
 msgid "with the diamond key"
 msgstr ""
 
-#: src/skarabeusz.cc:99
+#: src/skarabeusz.cc:283
 msgid "with the silver key"
 msgstr ""
 
-#: src/skarabeusz.cc:100
+#: src/skarabeusz.cc:284
 msgid "with the golden key"
 msgstr ""
 
-#: src/skarabeusz.cc:101
+#: src/skarabeusz.cc:285
 msgid "with the orange key"
 msgstr ""
 
-#: src/skarabeusz.cc:102
+#: src/skarabeusz.cc:286
 msgid "with the brown key"
 msgstr ""
 
-#: src/skarabeusz.cc:103
+#: src/skarabeusz.cc:287
 msgid "with the gray key"
 msgstr ""
 
-#: src/skarabeusz.cc:104
+#: src/skarabeusz.cc:288
 msgid "with the olive key"
 msgstr ""
 
-#: src/skarabeusz.cc:105
+#: src/skarabeusz.cc:289
 msgid "with the maroon key"
 msgstr ""
 
-#: src/skarabeusz.cc:106
+#: src/skarabeusz.cc:290
 msgid "with the violet key"
 msgstr ""
 
-#: src/skarabeusz.cc:107
+#: src/skarabeusz.cc:291
 msgid "with the magenta key"
 msgstr ""
 
-#: src/skarabeusz.cc:108
+#: src/skarabeusz.cc:292
 msgid "with the cream key"
 msgstr ""
 
-#: src/skarabeusz.cc:109
+#: src/skarabeusz.cc:293
 msgid "with the coral key"
 msgstr ""
 
-#: src/skarabeusz.cc:110
+#: src/skarabeusz.cc:294
 msgid "with the burgundy key"
 msgstr ""
 
-#: src/skarabeusz.cc:111
+#: src/skarabeusz.cc:295
 msgid "with the peach key"
 msgstr ""
 
-#: src/skarabeusz.cc:112
+#: src/skarabeusz.cc:296
 msgid "with the rust key"
 msgstr ""
 
-#: src/skarabeusz.cc:113
+#: src/skarabeusz.cc:297
 msgid "with the pink key"
 msgstr ""
 
-#: src/skarabeusz.cc:114
+#: src/skarabeusz.cc:298
 msgid "with the cyan key"
 msgstr ""
 
-#: src/skarabeusz.cc:115
+#: src/skarabeusz.cc:299
 msgid "with the scarlet key"
 msgstr ""
 
-#: src/skarabeusz.cc:121
+#: src/skarabeusz.cc:305
 msgid "red"
 msgstr ""
 
-#: src/skarabeusz.cc:122
+#: src/skarabeusz.cc:306
 msgid "white"
 msgstr ""
 
-#: src/skarabeusz.cc:123
+#: src/skarabeusz.cc:307
 msgid "black"
 msgstr ""
 
-#: src/skarabeusz.cc:124
+#: src/skarabeusz.cc:308
 msgid "yellow"
 msgstr ""
 
-#: src/skarabeusz.cc:125
+#: src/skarabeusz.cc:309
 msgid "green"
 msgstr ""
 
-#: src/skarabeusz.cc:126
+#: src/skarabeusz.cc:310
 msgid "blue"
 msgstr ""
 
-#: src/skarabeusz.cc:127
+#: src/skarabeusz.cc:311
 msgid "purple"
 msgstr ""
 
-#: src/skarabeusz.cc:128
+#: src/skarabeusz.cc:312
 msgid "diamond"
 msgstr ""
 
-#: src/skarabeusz.cc:129
+#: src/skarabeusz.cc:313
 msgid "silver"
 msgstr ""
 
-#: src/skarabeusz.cc:130
+#: src/skarabeusz.cc:314
 msgid "golden"
 msgstr ""
 
-#: src/skarabeusz.cc:131
+#: src/skarabeusz.cc:315
 msgid "orange"
 msgstr ""
 
-#: src/skarabeusz.cc:132
+#: src/skarabeusz.cc:316
 msgid "brown"
 msgstr ""
 
-#: src/skarabeusz.cc:133
+#: src/skarabeusz.cc:317
 msgid "gray"
 msgstr ""
 
-#: src/skarabeusz.cc:134
+#: src/skarabeusz.cc:318
 msgid "olive"
 msgstr ""
 
-#: src/skarabeusz.cc:135
+#: src/skarabeusz.cc:319
 msgid "maroon"
 msgstr ""
 
-#: src/skarabeusz.cc:136
+#: src/skarabeusz.cc:320
 msgid "violet"
 msgstr ""
 
-#: src/skarabeusz.cc:137
+#: src/skarabeusz.cc:321
 msgid "magenta"
 msgstr ""
 
-#: src/skarabeusz.cc:138
+#: src/skarabeusz.cc:322
 msgid "cream"
 msgstr ""
 
-#: src/skarabeusz.cc:139
+#: src/skarabeusz.cc:323
 msgid "coral"
 msgstr ""
 
-#: src/skarabeusz.cc:140
+#: src/skarabeusz.cc:324
 msgid "burgundy"
 msgstr ""
 
-#: src/skarabeusz.cc:141
+#: src/skarabeusz.cc:325
 msgid "peach"
 msgstr ""
 
-#: src/skarabeusz.cc:142
+#: src/skarabeusz.cc:326
 msgid "rust"
 msgstr ""
 
-#: src/skarabeusz.cc:143
+#: src/skarabeusz.cc:327
 msgid "pink"
 msgstr ""
 
-#: src/skarabeusz.cc:144
+#: src/skarabeusz.cc:328
 msgid "cyan"
 msgstr ""
 
-#: src/skarabeusz.cc:145
+#: src/skarabeusz.cc:329
 msgid "scarlet"
 msgstr ""
 
-#: src/skarabeusz.cc:258 src/skarabeusz.cc:279
+#: src/skarabeusz.cc:442 src/skarabeusz.cc:463
 msgid "You are standing in a small room."
 msgstr ""
 
-#: src/skarabeusz.cc:263
+#: src/skarabeusz.cc:447
 msgid "You are standing in a corridor leading from north to south."
 msgstr ""
 
-#: src/skarabeusz.cc:268
+#: src/skarabeusz.cc:452
 msgid "You are standing in a corridor leading from east to west."
 msgstr ""
 
-#: src/skarabeusz.cc:275
+#: src/skarabeusz.cc:459
 msgid "You are standing in a small square room."
 msgstr ""
 
-#: src/skarabeusz.cc:286
+#: src/skarabeusz.cc:470
 msgid "You are standing in a large square room."
 msgstr ""
 
-#: src/skarabeusz.cc:290
+#: src/skarabeusz.cc:474
 msgid "You are standing in a large room."
 msgstr ""
 
-#: src/skarabeusz.cc:308
+#: src/skarabeusz.cc:492
 #, c-format
 msgid "Apart from you there is a dwarf at %s here."
 msgstr ""
 
-#: src/skarabeusz.cc:358
+#: src/skarabeusz.cc:542
 #, c-format
 msgid "There is a door %s in the northern wall."
 msgstr ""
 
-#: src/skarabeusz.cc:364
+#: src/skarabeusz.cc:548
 #, c-format
 msgid "There are %i door in the northern wall."
 msgid_plural "There are %i door in the northern wall."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/skarabeusz.cc:391
+#: src/skarabeusz.cc:575
 #, c-format
 msgid "There is a door %s in the eastern wall."
 msgstr ""
 
-#: src/skarabeusz.cc:397
+#: src/skarabeusz.cc:581
 #, c-format
 msgid "There are %i door in the eastern wall."
 msgid_plural "There are %i door in the eastern wall."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/skarabeusz.cc:424
+#: src/skarabeusz.cc:608
 #, c-format
 msgid "There is a door %s in the southern wall."
 msgstr ""
 
-#: src/skarabeusz.cc:430
+#: src/skarabeusz.cc:614
 #, c-format
 msgid "There are %i door in the southern wall."
 msgid_plural "There are %i door in the southern wall."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/skarabeusz.cc:456
+#: src/skarabeusz.cc:640
 #, c-format
 msgid "There is a door %s in the western wall."
 msgstr ""
 
-#: src/skarabeusz.cc:462
+#: src/skarabeusz.cc:646
 #, c-format
 msgid "There are %i door in the western wall."
 msgid_plural "There are %i door in the western wall."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/skarabeusz.cc:491
+#: src/skarabeusz.cc:675
 #, c-format
 msgid "There is a hatch %s in the ceiling."
 msgstr ""
 
-#: src/skarabeusz.cc:497
+#: src/skarabeusz.cc:681
 #, c-format
 msgid "There is %i hatch in the ceiling."
 msgid_plural "There are %i hatches in the ceiling."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/skarabeusz.cc:530
+#: src/skarabeusz.cc:714
 #, c-format
 msgid "There is a hatch %s in the floor."
 msgstr ""
 
-#: src/skarabeusz.cc:536
+#: src/skarabeusz.cc:720
 #, c-format
 msgid "There is %i hatch in the floor."
 msgid_plural "There are %i hatches in the floor."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/skarabeusz.cc:605
+#: src/skarabeusz.cc:789
 #, c-format
 msgid "The dwarf says: \"I would give you the %s key for your keys.\""
 msgstr ""
 
-#: src/skarabeusz.cc:624 src/skarabeusz.cc:704
+#: src/skarabeusz.cc:808 src/skarabeusz.cc:888
 #, c-format
 msgid "%s and %s"
 msgstr ""
 
-#: src/skarabeusz.cc:627 src/skarabeusz.cc:658
+#: src/skarabeusz.cc:811 src/skarabeusz.cc:842
 #, c-format
 msgid "The dwarf says: \"I would give you the keys %s for your keys.\""
 msgstr ""
 
-#: src/skarabeusz.cc:686
+#: src/skarabeusz.cc:870
 #, c-format
 msgid "You have the %s key."
 msgstr ""
 
-#: src/skarabeusz.cc:707
+#: src/skarabeusz.cc:891
 #, c-format
 msgid "You have the keys %s."
 msgstr ""
 
-#: src/skarabeusz.cc:737
+#: src/skarabeusz.cc:921
 #, c-format
 msgid "You have the following keys: %s."
 msgstr ""
 
-#: src/skarabeusz.cc:758
+#: src/skarabeusz.cc:942
 msgid "The dwarf pays no attention at you."
 msgstr ""
 
-#: src/skarabeusz.cc:768
+#: src/skarabeusz.cc:952
 #, c-format
 msgid "You are talking with the dwarf at %s."
 msgstr ""
 
-#: src/skarabeusz.cc:922
+#: src/skarabeusz.cc:1159
 msgid "What do you want to do?"
 msgstr ""
 
-#: src/skarabeusz.cc:923
+#: src/skarabeusz.cc:1160
 msgid "Talk with the dwarf - go to "
 msgstr ""
 
-#: src/skarabeusz.cc:949
+#: src/skarabeusz.cc:1187
 #, c-format
 msgid "Go to the field %s - "
 msgstr ""
 
-#: src/skarabeusz.cc:955
+#: src/skarabeusz.cc:1195
 #, c-format
 msgid "You are standing in front of the door at %s - "
 msgstr ""
 
-#: src/skarabeusz.cc:972
+#: src/skarabeusz.cc:1212
 #, c-format
 msgid "You can open the door %s and go north "
 msgstr ""
 
-#: src/skarabeusz.cc:978
+#: src/skarabeusz.cc:1221
 msgid "None of your keys opens the north door."
 msgstr ""
 
-#: src/skarabeusz.cc:984
+#: src/skarabeusz.cc:1227
 #, c-format
 msgid "You can open the door %s and go east "
 msgstr ""
 
-#: src/skarabeusz.cc:990
+#: src/skarabeusz.cc:1237
 msgid "None of your keys opens the east door."
 msgstr ""
 
-#: src/skarabeusz.cc:996
+#: src/skarabeusz.cc:1243
 #, c-format
 msgid "You can open the door %s and go south "
 msgstr ""
 
-#: src/skarabeusz.cc:1002
+#: src/skarabeusz.cc:1252
 msgid "None of your keys opens the south door."
 msgstr ""
 
-#: src/skarabeusz.cc:1008
+#: src/skarabeusz.cc:1258
 #, c-format
 msgid "You can open the door %s and go west "
 msgstr ""
 
-#: src/skarabeusz.cc:1014
+#: src/skarabeusz.cc:1268
 msgid "None of your keys opens the west door."
 msgstr ""
 
-#: src/skarabeusz.cc:1020
+#: src/skarabeusz.cc:1274
 #, c-format
 msgid "You can open the hatch %s and descend to the lower level "
 msgstr ""
 
-#: src/skarabeusz.cc:1026
+#: src/skarabeusz.cc:1284
 msgid "None of your keys opens the hatch in the floor."
 msgstr ""
 
-#: src/skarabeusz.cc:1032
+#: src/skarabeusz.cc:1290
 #, c-format
 msgid "You can open the hatch %s and ascend to the upper level "
 msgstr ""
 
-#: src/skarabeusz.cc:1038
+#: src/skarabeusz.cc:1299
 msgid "None of your keys opens the hatch in the ceiling."
 msgstr ""
 
-#: src/skarabeusz.cc:1045 src/skarabeusz.cc:1109
+#: src/skarabeusz.cc:1306 src/skarabeusz.cc:1391
 msgid "You can look around "
 msgstr ""
 
-#: src/skarabeusz.cc:1070
+#: src/skarabeusz.cc:1334
 #, c-format
 msgid "You are standing next to the dwarf at %s."
 msgstr ""
 
-#: src/skarabeusz.cc:1077
+#: src/skarabeusz.cc:1341
 msgid "Hello, my name is "
 msgstr ""
 
-#: src/skarabeusz.cc:1083
+#: src/skarabeusz.cc:1347
 msgid "Congratulations! You have won!"
 msgstr ""
 
-#: src/skarabeusz.cc:1097
+#: src/skarabeusz.cc:1354
+#, c-format
+msgid "You still need at least %i steps to achieve your target."
+msgstr ""
+
+#: src/skarabeusz.cc:1358
+#, c-format
+msgid "There are %i possible endings."
+msgstr ""
+
+#: src/skarabeusz.cc:1375
 msgid "If you accept it go to "
 msgstr ""
 
-#: src/skarabeusz.cc:1105
+#: src/skarabeusz.cc:1387
 msgid "The dwarf does not accept any exchange."
 msgstr ""
 
-#: src/skarabeusz.cc:2229
+#: src/skarabeusz.cc:2515
 #, c-format
 msgid "This is a map of the level %i."
 msgstr ""
 
-#: src/skarabeusz.cc:2277
+#: src/skarabeusz.cc:2563
 msgid "teleport"
 msgstr ""
 
-#: src/skarabeusz.cc:2281
+#: src/skarabeusz.cc:2567
 #, c-format
 msgid "Hello! Press %s in order to enter the maze."
 msgstr ""

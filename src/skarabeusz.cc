@@ -20,6 +20,20 @@
 #define DEBUG(X)
 #endif
 
+
+std::ostream& operator<<(std::ostream & s, const skarabeusz::paragraph_connection & pc)
+{
+    s << pc.get_first().get_number() << "->" << pc.get_second().get_number();
+    return s;
+}
+
+std::ostream& operator<<(std::ostream & s, const skarabeusz::paragraph & p)
+{
+    p.print_text(s);
+    return s;
+}
+
+
 void skarabeusz::generator::run()
 {
     target.resize(parameters.maze_x_range, parameters.maze_y_range, parameters.maze_z_range);
@@ -41,8 +55,178 @@ void skarabeusz::generator::run()
     process_the_equivalence_classes();
     generate_names();
     generate_paragraphs();
+    calculate_min_distance_to_the_closest_ending();
 }   
 
+bool skarabeusz::maze::get_all_paragraph_connections_have_been_processed() const
+{
+    return std::find_if(vector_of_paragraph_connections.begin(), vector_of_paragraph_connections.end(),[](const auto & pc){ return !pc->get_has_been_processed(); }) == vector_of_paragraph_connections.end();
+}
+
+void skarabeusz::generator::calculate_min_distance_to_the_closest_ending()
+{
+    DEBUG("calculate min distance to the closest ending");
+
+    while (!target.get_all_paragraph_connections_have_been_processed())
+    {
+        DEBUG("processing paragraph connnections");
+        bool found = false;
+        for (auto & pc: target.vector_of_paragraph_connections)
+        {
+            if (pc->first.get_distance_has_been_calculated() && !pc->second.get_distance_has_been_calculated())
+            {
+                pc->second.set_distance_to_the_closest_ending(pc->first.get_distance_to_the_closest_ending()+1);
+                pc->set_has_been_processed(true);
+                DEBUG(*pc << " has been processed");
+                found = true;
+            }
+            else
+            if (!pc->first.get_distance_has_been_calculated() && pc->second.get_distance_has_been_calculated())
+            {
+                pc->first.set_distance_to_the_closest_ending(pc->second.get_distance_to_the_closest_ending()+1);
+                pc->set_has_been_processed(true);
+                DEBUG(*pc << " has been processed");
+                found = true;
+            }
+            else
+            if (pc->first.get_distance_has_been_calculated() && pc->second.get_distance_has_been_calculated() && !pc->get_has_been_processed())
+            {
+                pc->set_has_been_processed(true);
+                DEBUG(*pc << " has been processed");
+                found = true;
+            }
+            else
+            if (pc->first.get_distance_has_been_calculated() && pc->second.get_distance_has_been_calculated() && pc->first.distance_to_the_closest_ending + 1 < pc->second.distance_to_the_closest_ending)
+            {
+                pc->second.distance_to_the_closest_ending = pc->first.distance_to_the_closest_ending + 1;
+            }
+            else
+            if (pc->first.get_distance_has_been_calculated() && pc->second.get_distance_has_been_calculated() && pc->second.distance_to_the_closest_ending + 1 < pc->first.distance_to_the_closest_ending)
+            {
+                pc->first.distance_to_the_closest_ending = pc->second.distance_to_the_closest_ending + 1;
+            }
+        }
+
+        if (!found)
+        {
+            for (auto & pc: target.vector_of_paragraph_connections)
+            {
+                if (!pc->get_has_been_processed())
+                {
+                    std::cout << *pc << " has not been processed\n";
+                }
+            }
+            for (auto & p: target.vector_of_paragraphs)
+            {
+                std::cout << *p << " distance " << p->distance_to_the_closest_ending << "\n";
+            }
+            throw std::runtime_error("not all paragraphs are connected!");
+        }
+    }
+}
+
+void skarabeusz::hyperlink::print_text(std::ostream & s) const
+{
+    s << "(" << my_paragraph.get_number() << ")";
+}
+
+
+void skarabeusz::paragraph::print_text(std::ostream & s) const
+{
+    s << number << "\n";
+    for (const auto & pi: list_of_paragraph_items)
+    {
+        pi->print_text(s);
+        s << " ";
+    }
+    s << "\n";
+}
+
+
+skarabeusz::paragraph& skarabeusz::maze::get_discussion_paragraph(chamber_and_keys & c)
+{
+    auto x = std::find_if(vector_of_paragraphs.begin(), vector_of_paragraphs.end(), [&c](const auto & p){ return p->get_type() == paragraph::paragraph_type::DISCUSSION && p->get_state() == c; });
+
+    if (x == vector_of_paragraphs.end())
+    {
+        throw std::runtime_error("found no paragraph in this chamber");
+    }
+
+    return **x;
+}
+
+skarabeusz::paragraph& skarabeusz::maze::get_description_paragraph(chamber_and_keys & c)
+{
+    auto x = std::find_if(vector_of_paragraphs.begin(), vector_of_paragraphs.end(), [&c](const auto & p){ return p->get_type() == paragraph::paragraph_type::CHAMBER_DESCRIPTION && p->get_state() == c; });
+
+    if (x == vector_of_paragraphs.end())
+    {
+        throw std::runtime_error("found no paragraph in this chamber");
+    }
+
+    return **x;
+}
+
+skarabeusz::paragraph& skarabeusz::maze::get_door_paragraph(chamber_and_keys & c, int index)
+{
+    int amount=0;
+    for (int i=0; i<vector_of_paragraphs.size(); i++)
+    {
+        auto & p=vector_of_paragraphs[i];
+        if (p->get_type() == paragraph::paragraph_type::DOOR && p->get_state() == c)
+        {
+            if (amount == index)
+            {
+                return *p;
+            }
+            else
+            {
+                amount++;
+            }
+        }
+    }
+    throw std::runtime_error("index out of range");
+}
+
+bool skarabeusz::room::get_has_door_object(door_object & d) const
+{
+    return std::find_if(list_of_door.begin(), list_of_door.end(),[&d](const auto &my_door)
+    { return my_door->get_door_object()==d; }) != list_of_door.end();
+}
+
+
+skarabeusz::paragraph& skarabeusz::maze::get_door_paragraph(chamber_and_keys & c, door_object & d)
+{
+    auto x = std::find_if(vector_of_paragraphs.begin(), vector_of_paragraphs.end(),
+                          [this,&c,&d](const auto & p)
+    {
+        return p->get_type() == paragraph::paragraph_type::DOOR
+                && p->get_state() == c
+                && array_of_rooms[p->get_x()][p->get_y()][p->get_z()]->get_has_door_object(d);
+    });
+
+    if (x == vector_of_paragraphs.end())
+    {
+        throw std::runtime_error("found no door paragraph in this chamber");
+    }
+
+    return **x;
+}
+
+
+int skarabeusz::maze::get_amount_of_door_in_chamber(chamber_and_keys & c)
+{
+    int amount=0;
+    for (int i=0; i<vector_of_paragraphs.size(); i++)
+    {
+        auto & p=vector_of_paragraphs[i];
+        if (p->get_type() == paragraph::paragraph_type::DOOR && p->get_state() == c)
+        {
+            amount++;
+        }
+    }
+    return amount;
+}
 
 
 void skarabeusz::generator::generate_names()
@@ -821,6 +1005,37 @@ std::string skarabeusz::room::which_key_can_open(direction_type d) const
     return "";  // this should never happen
 }
 
+skarabeusz::paragraph::paragraph(unsigned n, const chamber_and_keys & c, unsigned nx, unsigned ny, unsigned nz, paragraph_type t):
+number{n},
+my_state{c},
+type{t}, x{nx}, y{ny},z{nz}, ending{false},
+distance_to_the_closest_ending{std::numeric_limits<int>::max()},
+distance_has_been_calculated{false}
+{}
+
+void skarabeusz::hint_you_still_need_i_steps::print_latex(std::ostream & s) const
+{
+    char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+    snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You still need at least %i steps to achieve your target."), my_paragraph.distance_to_the_closest_ending);
+    s << buffer;
+}
+
+void skarabeusz::hint_you_still_need_i_steps::print_html(std::ostream & s) const
+{
+    char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+    snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You still need at least %i steps to achieve your target."), my_paragraph.distance_to_the_closest_ending);
+
+    s << buffer;
+}
+
+void skarabeusz::hint_you_still_need_i_steps::print_text(std::ostream & s) const
+{
+    char buffer[SKARABEUSZ_MAX_MESSAGE_BUFFER];
+    snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You still need at least %i steps to achieve your target."), my_paragraph.distance_to_the_closest_ending);
+
+    s << buffer;
+}
+
 
 void skarabeusz::generator::generate_paragraphs()
 {
@@ -856,7 +1071,9 @@ void skarabeusz::generator::generate_paragraphs()
         z = target.vector_of_chambers[i.first]->get_seed().z;
         
         target.vector_of_paragraphs.push_back(std::make_unique<paragraph>(++number, c, x, y, z , paragraph::paragraph_type::DISCUSSION));
-    }    
+
+        target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(target.get_discussion_paragraph(c), target.get_description_paragraph(c)));
+    }
     
     amount_of_discussions = list_of_processed_pairs_chamber_and_keys.size();
     
@@ -872,6 +1089,9 @@ void skarabeusz::generator::generate_paragraphs()
         while (target.vector_of_paragraphs[index+amount_of_chamber_descriptions]->get_ending());
         
         target.vector_of_paragraphs[index+amount_of_chamber_descriptions]->set_ending(true);
+
+        target.vector_of_paragraphs[index+amount_of_chamber_descriptions]->set_distance_to_the_closest_ending(0);
+
         amount_of_endings++;        
     }
     while (amount_of_endings < parameters.amount_of_alternative_endings);
@@ -898,7 +1118,9 @@ void skarabeusz::generator::generate_paragraphs()
                 {
                     if (target.array_of_rooms[x][y][z]->get_list_of_door().size()>0)
                     {
-                        target.vector_of_paragraphs.push_back(std::make_unique<paragraph>(++number, c, x,y,z, paragraph::paragraph_type::DOOR));
+                        auto new_door_paragraph = std::make_unique<paragraph>(++number, c, x,y,z, paragraph::paragraph_type::DOOR);
+
+                        target.vector_of_paragraphs.push_back(std::move(new_door_paragraph));
                         amount_of_door_rooms++;
                     }
                 }
@@ -906,6 +1128,45 @@ void skarabeusz::generator::generate_paragraphs()
         }        
     }
   
+    for (auto & i: list_of_processed_pairs_chamber_and_keys)
+    {
+        chamber_and_keys c{i.first, i.second};
+
+        int amount = target.get_amount_of_door_in_chamber(c);
+
+        for (int j=0; j<amount; j++)
+        {
+            target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(target.get_description_paragraph(c), target.get_door_paragraph(c, j)));
+
+            auto & my_door_paragraph = target.get_door_paragraph(c, j);
+            auto & my_room = target.array_of_rooms[my_door_paragraph.get_x()][my_door_paragraph.get_y()][my_door_paragraph.get_z()];
+
+            for (auto & dd: my_room->get_list_of_door())
+            {
+                for (int d=static_cast<int>(room::direction_type::NORTH); d < 6; d++)
+                {
+                    if (my_room->get_has_door_leading(static_cast<room::direction_type>(d)) && my_room->get_door_can_be_opened_with(static_cast<room::direction_type>(d), i.second))
+                    {
+                        if (dd->chamber1 == i.first)
+                        {
+                            chamber_and_keys c2{dd->chamber2, i.second};
+
+                            target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(target.get_door_paragraph(c, j), target.get_door_paragraph(c2, dd->get_door_object())));
+                        }
+                        else
+                        if (dd->chamber2 == i.first)
+                        {
+                            chamber_and_keys c2{dd->chamber2, i.second};
+
+                            target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(target.get_door_paragraph(c, j), target.get_door_paragraph(c2, dd->get_door_object())));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     target.amount_of_paragraphs = number;
     
     for (unsigned i=0; i<amount_of_chamber_descriptions; i++)
@@ -922,6 +1183,7 @@ void skarabeusz::generator::generate_paragraphs()
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(_("What do you want to do?")));
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(_("Talk with the dwarf - go to ")));
         target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[i+amount_of_chamber_descriptions]));
+        target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(*target.vector_of_paragraphs[i], *target.vector_of_paragraphs[i+amount_of_chamber_descriptions]));
         
         unsigned x1,x2,y1,y2,z1,z2;
         unsigned chamber_id = target.vector_of_paragraphs[i+amount_of_chamber_descriptions]->get_state().get_chamber_id()+1;
@@ -950,7 +1212,9 @@ void skarabeusz::generator::generate_paragraphs()
                         
                         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(buffer));                        
                         target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[number]));
-                        
+
+                        target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(*target.vector_of_paragraphs[i], *target.vector_of_paragraphs[number]));
+
                         
                         snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You are standing in front of the door at %s - "), target.array_of_rooms[x][y][z]->get_name().c_str());
 
@@ -972,6 +1236,9 @@ void skarabeusz::generator::generate_paragraphs()
                                             snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You can open the door %s and go north "), _(target.array_of_rooms[x][y][z]->which_key_can_open(di).c_str()));                                            
                                             target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y-1,z,k, paragraph::paragraph_type::DOOR)]));
+
+                                            target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(*target.vector_of_paragraphs[number], *target.vector_of_paragraphs[target.get_paragraph_index(x,y-1,z,k, paragraph::paragraph_type::DOOR)]));
+
                                         }
                                         else
                                         {
@@ -984,6 +1251,10 @@ void skarabeusz::generator::generate_paragraphs()
                                             snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You can open the door %s and go east "), _(target.array_of_rooms[x][y][z]->which_key_can_open(di).c_str()));                                            
                                             target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x+1,y,z,k, paragraph::paragraph_type::DOOR)]));
+
+
+                                            target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(*target.vector_of_paragraphs[number], *target.vector_of_paragraphs[target.get_paragraph_index(x+1,y,z,k, paragraph::paragraph_type::DOOR)]));
+
                                         }
                                         else
                                         {
@@ -995,7 +1266,10 @@ void skarabeusz::generator::generate_paragraphs()
                                         {                                        
                                             snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You can open the door %s and go south "), _(target.array_of_rooms[x][y][z]->which_key_can_open(di).c_str()));                                            
                                             target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                                                                                    
-                                            target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y+1,z,k, paragraph::paragraph_type::DOOR)]));                                            
+                                            target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y+1,z,k, paragraph::paragraph_type::DOOR)]));
+
+                                            target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(*target.vector_of_paragraphs[number], *target.vector_of_paragraphs[target.get_paragraph_index(x,y+1,z,k, paragraph::paragraph_type::DOOR)]));
+
                                         }
                                         else
                                         {
@@ -1008,6 +1282,10 @@ void skarabeusz::generator::generate_paragraphs()
                                             snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You can open the door %s and go west "), _(target.array_of_rooms[x][y][z]->which_key_can_open(di).c_str()));                                            
                                             target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x-1,y,z,k, paragraph::paragraph_type::DOOR)]));
+
+
+                                            target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(*target.vector_of_paragraphs[number], *target.vector_of_paragraphs[target.get_paragraph_index(x-1,y,z,k, paragraph::paragraph_type::DOOR)]));
+
                                         }
                                         else
                                         {
@@ -1020,6 +1298,10 @@ void skarabeusz::generator::generate_paragraphs()
                                             snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You can open the hatch %s and descend to the lower level "), _(target.array_of_rooms[x][y][z]->which_key_can_open(di).c_str()));                                            
                                             target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y,z-1,k, paragraph::paragraph_type::DOOR)]));
+
+
+                                            target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(*target.vector_of_paragraphs[number], *target.vector_of_paragraphs[target.get_paragraph_index(x,y,z-1,k, paragraph::paragraph_type::DOOR)]));
+
                                         }
                                         else
                                         {
@@ -1032,6 +1314,9 @@ void skarabeusz::generator::generate_paragraphs()
                                             snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("You can open the hatch %s and ascend to the upper level "), _(target.array_of_rooms[x][y][z]->which_key_can_open(di).c_str()));                                            
                                             target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(buffer));                                                                                    
                                             target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(x,y,z+1,k, paragraph::paragraph_type::DOOR)]));
+
+                                            target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(*target.vector_of_paragraphs[number], *target.vector_of_paragraphs[target.get_paragraph_index(x,y,z+1,k, paragraph::paragraph_type::DOOR)]));
+
                                         }
                                         else
                                         {
@@ -1045,6 +1330,9 @@ void skarabeusz::generator::generate_paragraphs()
                         target.vector_of_paragraphs[number]->add(std::make_unique<normal_text>(_("You can look around ")));
                         target.vector_of_paragraphs[number]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[number]->get_state().get_chamber_id(),target.vector_of_paragraphs[number]->get_state().get_keys(), paragraph::paragraph_type::CHAMBER_DESCRIPTION)]));
                                                 
+
+                        target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(*target.vector_of_paragraphs[number], *target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[number]->get_state().get_chamber_id(),target.vector_of_paragraphs[number]->get_state().get_keys(), paragraph::paragraph_type::CHAMBER_DESCRIPTION)]));
+
                         number++;                        
                     }
                 }
@@ -1084,6 +1372,17 @@ void skarabeusz::generator::generate_paragraphs()
         }        
         else
         {
+            if (parameters.hints)
+            {
+                target.vector_of_paragraphs[i]->add(std::make_unique<hint_you_still_need_i_steps>(*target.vector_of_paragraphs[i]));
+
+                snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("There are %i possible endings."), parameters.amount_of_alternative_endings);
+
+                target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(buffer));
+            }
+
+
+
             if (it != target.vector_of_virtual_door[target.vector_of_paragraphs[i]->get_state().get_chamber_id()].get_list_of_virtual_door().end())
             {
                 for (auto x=it->get_list_of_matrices().begin(); x!=it->get_list_of_matrices().end(); x++)
@@ -1097,6 +1396,10 @@ void skarabeusz::generator::generate_paragraphs()
                         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(_("If you accept it go to ")));                                        
                         target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[i]->get_state().get_chamber_id(), k2, paragraph::paragraph_type::DISCUSSION)]));
                         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(". "));
+
+
+                        target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(*target.vector_of_paragraphs[i], *target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[i]->get_state().get_chamber_id(), k2, paragraph::paragraph_type::DISCUSSION)]));
+
                     }
                 }
             }
@@ -1108,6 +1411,10 @@ void skarabeusz::generator::generate_paragraphs()
 
         target.vector_of_paragraphs[i]->add(std::make_unique<normal_text>(_("You can look around ")));
         target.vector_of_paragraphs[i]->add(std::make_unique<hyperlink>(*target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[i]->get_state().get_chamber_id(),target.vector_of_paragraphs[i]->get_state().get_keys(), paragraph::paragraph_type::CHAMBER_DESCRIPTION)]));        
+
+
+        target.vector_of_paragraph_connections.push_back(std::make_unique<paragraph_connection>(*target.vector_of_paragraphs[i], *target.vector_of_paragraphs[target.get_paragraph_index(target.vector_of_paragraphs[i]->get_state().get_chamber_id(),target.vector_of_paragraphs[i]->get_state().get_keys(), paragraph::paragraph_type::CHAMBER_DESCRIPTION)]));
+
     }
     
     std::shuffle(target.vector_of_paragraphs.begin(), target.vector_of_paragraphs.end(), gen);
@@ -2615,6 +2922,12 @@ bool skarabeusz::room::get_is_connected(const maze & m, direction_type t) const
     return false;
 }
 
+void skarabeusz::maze::report(std::ostream & s) const
+{
+    s << "amount of chambers: " << vector_of_chambers.size() << "\n";
+    s << "amount of paragraphs: " << vector_of_paragraphs.size() << "\n";
+    s << "amount of paragraph connections: " << vector_of_paragraph_connections.size() << "\n";
+}
 
 void skarabeusz::maze::create_maps_html(const map_parameters & mp, const std::string & prefix, const resources & r)
 {

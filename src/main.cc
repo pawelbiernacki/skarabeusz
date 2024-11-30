@@ -18,7 +18,7 @@ int main(int argc, char * argv[])
     std::string prefix = "map";
     std::string html_head_filename="";
     enum class output_type { HTML, LATEX } output = output_type::LATEX;
-
+    bool hints = false;
     skarabeusz::resources r;
 
     for (unsigned i=1; i<argc; i++)
@@ -93,6 +93,11 @@ int main(int argc, char * argv[])
             max_amount_of_keys_to_hold = atoi(argv[++i]);
         }
         else
+        if (!strcmp(argv[i], "--hints"))
+        {
+            hints = true;
+        }
+        else
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help"))
         {
             std::cout << "skarabeusz supports following options:\n";
@@ -107,6 +112,7 @@ int main(int argc, char * argv[])
             std::cout << "          -a <value>                  - amount of alternative endings\n";
             std::cout << "          -p <prefix>                 - output file prefix\n";
             std::cout << "          --max-keys <value>          - max amount of keys\n";
+            std::cout << "          --hints                     - hints\n";
             exit(0);
         }
         else
@@ -155,12 +161,15 @@ int main(int argc, char * argv[])
                 3, // max amount of magic items
                 amount_of_chambers, // amount of chambers
                 max_amount_of_keys_to_hold,// max amount of keys to hold
-                amount_of_alternative_endings};
+                amount_of_alternative_endings,
+                hints};
     skarabeusz::maze m;
 
     skarabeusz::generator g{gp, m};
 
     g.run();
+
+    m.report(std::cout);
 
     skarabeusz::map_parameters mp{80,80};
     r.add_resource(std::make_unique<skarabeusz::resource_image>("figure_dwarf", "/usr/local/share/skarabeusz/figure_dwarf.png"));
