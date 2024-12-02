@@ -63,6 +63,12 @@ void skarabeusz::generator::run()
     process_door_paragraphs_connections(),
     calculate_min_distance_to_the_closest_ending();
 
+    if (parameters.bootstrap)
+    {
+        set_bootstrap_mode();
+        target.bootstrap = true;
+    }
+
     if (parameters.stories)
     {
         generate_stories();
@@ -83,6 +89,14 @@ const std::string skarabeusz::character::get_family_name() const
     throw std::runtime_error("internal error - could not match a name");
 
     return "???"; // should never happen
+}
+
+void skarabeusz::generator::set_bootstrap_mode()
+{
+    for (auto & p:target.vector_of_paragraphs)
+    {
+        p->bootstrap = true;
+    }
 }
 
 void skarabeusz::generator::process_door_paragraphs_connections()
@@ -999,6 +1013,60 @@ std::string skarabeusz::generator::get_random_name()
 
 void skarabeusz::paragraph::print_html(std::ostream & s) const
 {
+    if (bootstrap)
+    {
+        s << "<div class=\"container-fluid\">\n";
+
+        s << "<div class=\"row\">\n";
+        s << "<div class=\"col-12\">\n";
+        s << "<div class=\"bokor-regular\" style=\"font-size:100px; text-align:center;\">Skarabeusz</div>";
+        s << "</div>\n";
+        s << "</div>\n";
+
+        s << "<div class=\"row\">\n";
+
+        s << "<div class=\"col-2\">\n";
+
+        s << "<h3>" << get_number() << "</h3>\n";
+
+        s << "<img class=\"img-fluid\" src=\"compass.png\">\n";
+
+        s << "</div>";
+
+
+        s << "<div class=\"col-8\">\n";
+
+        s << "<img src=\"map_" << z << "_" << (get_number()-1) << ".png\" class=\"img-fluid\">\n";
+
+        s << "</div>";
+
+        s << "<div class=\"col-2\">\n";
+
+        s << "</div>\n";
+
+        s << "</div>\n";
+
+        s << "<div class=\"row\">\n";
+
+        s << "<div class=\"col-12\">\n";
+
+        s << "<div class=\"skarabeusz\">\n";
+
+        for (auto & a: list_of_paragraph_items)
+        {
+            a->print_html(s);
+            s << " \n";
+        }
+        s << "</div>\n";
+
+        s << "</div>\n";
+
+        s << "</div>\n";
+
+        s << "</div>\n";
+    }
+    else
+    {
     s << "<h3>" << get_number() << "</h3>\n";
     
     s << "<img src=\"map_" << z << "_" << (get_number()-1) << ".png\"><img class=\"compass\" src=\"compass.png\" width=\"100\" height=\"100\">\n<br/>\n";
@@ -1011,6 +1079,8 @@ void skarabeusz::paragraph::print_html(std::ostream & s) const
         s << " \n";
     }    
     s << "</div>\n";
+
+    }
 }
 
 
@@ -1714,7 +1784,8 @@ number{n},
 my_state{c},
 type{t}, x{nx}, y{ny},z{nz}, ending{false},
 distance_to_the_closest_ending{std::numeric_limits<int>::max()},
-distance_has_been_calculated{false}
+distance_has_been_calculated{false},
+bootstrap{false}
 {}
 
 void skarabeusz::hint_you_still_need_i_steps::print_latex(std::ostream & s) const
@@ -3400,8 +3471,25 @@ void skarabeusz::maze::create_html_index(const std::string & prefix, const std::
     file_stream 
         << "<!DOCTYPE html>\n" << "<html lang=\"" << convert_language_to_html_abbreviation(language) << "\">"
         << html_head
-        << "<body>\n"
-        << "<script language=\"JavaScript\">\n"
+        << "<body>\n";
+
+    if (bootstrap)
+    {
+        file_stream
+        << "<div class=\"container-fluid\">\n"
+        << "<div class=\"row\">\n"
+        << "<div class=\"col-12\">\n"
+        << "<div class=\"bokor-regular\" style=\"font-size:100px; text-align:center;\">Skarabeusz</div>"
+        << "</div>\n"
+        << "</div>\n"
+
+        << "<div class=\"row\">\n"
+        << "<div class=\"col-2\">\n"
+        << "</div>\n"
+        << "<div class=\"col-8\">\n";
+    }
+
+    file_stream << "<script language=\"JavaScript\">\n"
         << "function teleport(m)\n"
         << "{\n"
         << "var i=Math.floor(Math.random()*(m-1))+1;\n"
@@ -3418,6 +3506,16 @@ void skarabeusz::maze::create_html_index(const std::string & prefix, const std::
     snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("Hello! Press %s in order to enter the maze."), teleport_code_stream.str().c_str());
     file_stream << buffer;
                 
+    if (bootstrap)
+    {
+        file_stream << "</div>"
+        << "<div class=\"col-2\">\n"
+        << "</div>\n"
+        << "</div>\n"
+        << "</div>\n"
+        << "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz\" crossorigin=\"anonymous\"></script>\n";
+    }
+
     file_stream
         << "</body>\n"
         << "</html>\n";
@@ -3449,7 +3547,25 @@ void skarabeusz::maze::create_html(const std::string & prefix, const std::string
     }
     else
     {
-        html_head_stringstream << "<head><meta charset=\"UTF-8\"></head>";
+        html_head_stringstream << "<head><meta charset=\"UTF-8\">";
+
+        if (bootstrap)
+        {
+            html_head_stringstream <<
+            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+
+            << "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH\" crossorigin=\"anonymous\">\n"
+
+            // Google fonts - Bokor
+
+            << "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n"
+            << "<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n"
+            << "<link href=\"https://fonts.googleapis.com/css2?family=Bokor&display=swap\" rel=\"stylesheet\">\n"
+
+            << "<style> .bokor-regular { font-family: \"Bokor\", system-ui; font-weight: 400; font-style: normal;} </style>\n";            ;
+        }
+
+        html_head_stringstream << "</head>";
     }
     
     create_html_index(prefix, language, html_head_stringstream.str());
@@ -3468,6 +3584,11 @@ void skarabeusz::maze::create_html(const std::string & prefix, const std::string
         
         vector_of_paragraphs[z]->print_html(file_stream);
         
+        if (bootstrap)
+        {
+            file_stream << "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz\" crossorigin=\"anonymous\"></script>\n";
+        }
+
         file_stream
         << "</body>\n"
         << "</html>\n";

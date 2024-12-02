@@ -89,6 +89,8 @@ namespace skarabeusz
 
         bool books;
 
+        bool bootstrap;
+
     public:
         enum class output_mode_type { NONE=0x0, LATEX=0x1, HTML=0x2 };
 
@@ -103,7 +105,7 @@ namespace skarabeusz
         stories_mode_type how_to_generate_stories;
 
     public:
-        generator_parameters(unsigned xr, unsigned yr, unsigned zr, unsigned maomi, unsigned aoc, unsigned maokth, unsigned aoae, bool h, bool s, stories_mode_type sm, bool b, unsigned ah):
+        generator_parameters(unsigned xr, unsigned yr, unsigned zr, unsigned maomi, unsigned aoc, unsigned maokth, unsigned aoae, bool h, bool s, stories_mode_type sm, bool b, unsigned ah, bool bs):
             maze_x_range(xr), maze_y_range(yr), maze_z_range(zr),
             max_amount_of_magic_items{maomi},
             amount_of_chambers{aoc},
@@ -114,7 +116,8 @@ namespace skarabeusz
             stories{s},
             how_to_generate_stories{sm},
             books{b},
-            amount_of_heroes{ah}
+            amount_of_heroes{ah},
+            bootstrap{bs}
             {
             }
     };
@@ -608,8 +611,12 @@ namespace skarabeusz
         unsigned x,y,z;
 
         std::vector<int> vector_of_door_object_indeces;
+
+        bool bootstrap;
     public:
         paragraph(unsigned n, const chamber_and_keys & c, unsigned nx, unsigned ny, unsigned nz, paragraph_type t);
+
+        void set_bootstrap_mode(bool b) { bootstrap = b; }
 
         void add_door_object_index(int i);
 
@@ -730,8 +737,9 @@ namespace skarabeusz
 
         std::vector<std::unique_ptr<story>> vector_of_stories;
 
+        bool bootstrap;
     public:
-        maze(): amount_of_keys{0} {}
+        maze(): amount_of_keys{0}, bootstrap{false} {}
         
         void get_all_rooms_of_chamber(unsigned id, std::vector<std::shared_ptr<room>> & target) const;
         
@@ -883,6 +891,7 @@ namespace skarabeusz
         void generate_chambers_guardians();
         void generate_chambers_names();
         void process_door_paragraphs_connections();
+        void set_bootstrap_mode();
 
         int get_random_author_index();
         int get_random_hero_index();

@@ -18,7 +18,7 @@ int main(int argc, char * argv[])
     std::string prefix = "map";
     std::string html_head_filename="";
     enum class output_type { HTML, LATEX } output = output_type::LATEX;
-    bool hints = false, stories = false, books = false;
+    bool hints = false, stories = false, books = false, bootstrap = false;
     skarabeusz::generator_parameters::stories_mode_type stories_mode = skarabeusz::generator_parameters::stories_mode_type::RANDOM;
     unsigned amount_of_heroes = 1;
     skarabeusz::resources r;
@@ -217,6 +217,11 @@ int main(int argc, char * argv[])
             amount_of_heroes = atoi(argv[i]);
         }
         else
+        if (!strcmp(argv[i], "--bootstrap"))
+        {
+            bootstrap = true; // for HTML only!
+        }
+        else
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help"))
         {
             std::cout << "skarabeusz supports following options:\n";
@@ -293,7 +298,8 @@ int main(int argc, char * argv[])
                 stories,
                 stories_mode,
                 books,
-                amount_of_heroes};
+                amount_of_heroes,
+                bootstrap};
     skarabeusz::maze m;
 
     skarabeusz::generator g{gp, m};
