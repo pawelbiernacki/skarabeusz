@@ -17,7 +17,11 @@ Skarabeusz accepts the following options (in any order):
     -a <amount of alternative endings>
     -p <prefix>
     -o (html|latex)
-    -l (english|polish|russian)
+    -l (english|polish|russian|finnish)
+    --hints
+    --stories (good|bad|random|alignment)
+    --books
+    --heroes <amount of heroes>
     -v
 
 Running skarabeusz with no parameters at all works as:
@@ -25,3 +29,14 @@ Running skarabeusz with no parameters at all works as:
 skarabeusz -x 10 -y 7 -z 1 -c 5 -a 1 -p "map" -o latex
 
 Warning: Making c too high will cause skarabeusz to run very long.
+
+Activating hints makes the game very easy - each person you meet will tell you how far you are from the closest ending.
+
+Activating stories makes the generator to add a story after each transaction (exchanging keys).
+There are following stories modes:
+
+    - good stories - helping you to win the game
+    - bad stories - stories about guys who failed
+    - random - this is the default setting, it tells you about some journey through the maze
+    - alignment - the stories told (or written) by a character are always good or always bad
+                    depending on his alignment

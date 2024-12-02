@@ -7,11 +7,56 @@
 #include <list>
 #include <map>
 #include <limits>
+#include <regex>
 #include <gd.h>
 #include <gdfontg.h>
 
 namespace skarabeusz
 {
+    class character
+    {
+    friend class story_interpretation;
+    friend class generator;
+    public:
+        enum class alignment_type { GOOD, BAD };
+    private:
+        static const std::regex regex_to_extract_family_name;
+
+        const std::string my_name;
+        const alignment_type my_alignment;
+        std::string my_favourite_positive_adjective, my_favourite_negative_adjective;
+    public:
+        character(const std::string & n, alignment_type at):
+            my_name{n},
+            my_alignment{at}
+        {}
+
+        const std::string get_name() const { return my_name; }
+
+        const std::string get_family_name() const;
+
+        alignment_type get_alignment() const { return my_alignment; }
+
+        bool operator==(const character & c) const
+        {
+            return my_name == c.my_name;
+        }
+
+        void set_favourite_adjectives(const std::string & p, const std::string & n)
+        {
+            my_favourite_positive_adjective = p;
+            my_favourite_negative_adjective = n;
+        }
+
+        const std::string get_favourite_positive_adjective() const
+        { return my_favourite_positive_adjective; }
+
+        const std::string get_favourite_negative_adjective() const
+        { return my_favourite_negative_adjective; }
+    };
+
+
+
     class map_parameters
     {
     private:
@@ -35,24 +80,41 @@ namespace skarabeusz
         unsigned amount_of_chambers;
         
         unsigned amount_of_alternative_endings;
+
+        unsigned amount_of_heroes;
                 
         bool hints;
+
+        bool stories;
+
+        bool books;
+
     public:
         enum class output_mode_type { NONE=0x0, LATEX=0x1, HTML=0x2 };
+
+        enum class stories_mode_type
+            { NONE=0x0, GOOD=0x1, BAD=0x2, RANDOM=0x3, ALIGNMENT_SPECIFIC=0x4 };
         
         enum class html_generating_mode { NONE=0x0, SINGLE_PAGE=0x1, MULTIPLE_PAGES = 0x2 };
     
     private:
         output_mode_type output_mode;
+
+        stories_mode_type how_to_generate_stories;
+
     public:
-        generator_parameters(unsigned xr, unsigned yr, unsigned zr, unsigned maomi, unsigned aoc, unsigned maokth, unsigned aoae, bool h):
+        generator_parameters(unsigned xr, unsigned yr, unsigned zr, unsigned maomi, unsigned aoc, unsigned maokth, unsigned aoae, bool h, bool s, stories_mode_type sm, bool b, unsigned ah):
             maze_x_range(xr), maze_y_range(yr), maze_z_range(zr),
             max_amount_of_magic_items{maomi},
             amount_of_chambers{aoc},
             max_amount_of_keys_to_hold{maokth},            
             output_mode{output_mode_type::LATEX},
             amount_of_alternative_endings{aoae},
-            hints{h}
+            hints{h},
+            stories{s},
+            how_to_generate_stories{sm},
+            books{b},
+            amount_of_heroes{ah}
             {
             }
     };
@@ -196,6 +258,8 @@ namespace skarabeusz
         
         void set_name(const std::string & n);
         
+        door & get_door_leading(direction_type d) const;
+
         bool get_has_door_leading(direction_type d) const;
         
         bool get_door_can_be_opened_with(direction_type d, const keys & k) const;
@@ -215,10 +279,15 @@ namespace skarabeusz
         unsigned chamber1,chamber2;
         unsigned key_number;    // begins with 1
         const std::string key_name, with_the_key_name;
+
+        int index;
+
+        std::string my_door_object_name;
     public:
         door_object(unsigned c1, unsigned c2, unsigned kn, const std::string & k, const std::string & wtk): 
             chamber1{c1}, chamber2{c2}, key_number{kn}, 
-            key_name{k}, with_the_key_name{wtk} {}
+            key_name{k}, with_the_key_name{wtk}, index{-1},
+            my_door_object_name{"<undefined>"} {}
         
         bool get_connects(unsigned c1, unsigned c2) const { return (chamber1==c1 && chamber2==c2) || (chamber1==c2 && chamber2==c1); }
         
@@ -230,6 +299,12 @@ namespace skarabeusz
         {
             return chamber1 == d.chamber1 && chamber2 == d.chamber2 && key_number == d.key_number;
         }
+
+        void set_index(int i) { index = i; }
+
+        int get_index() const { return index; }
+
+        std::string get_name() const { return my_door_object_name; }
     };
     
 
@@ -259,6 +334,9 @@ namespace skarabeusz
     
     class chamber
     {
+        friend class generator;
+        friend class maze;
+        friend class story_interpretation;
     private:
         unsigned id;        
         struct seed_type 
@@ -268,15 +346,24 @@ namespace skarabeusz
             void set_y(unsigned ny) { y=ny; }
             void set_z(unsigned nz) { z=nz; }
         } seed;
-        std::string guardian_name;
+
+        std::unique_ptr<character> my_guardian;
+
+        std::string my_name;
     public:
         chamber(): id{0} {}
         
-        void set_guardian_name(const std::string & gn) { guardian_name = gn; }
+        void set_guardian_name(const std::string & gn, character::alignment_type alignment) { my_guardian = std::make_unique<character>(gn, alignment); }
         
-        std::string get_guardian_name() const { return guardian_name; }
+        std::string get_guardian_name() const { return my_guardian->get_name(); }
+
+        std::string get_guardian_family_name() const { return my_guardian->get_family_name(); }
+
+        character::alignment_type get_guardian_alignment() const { return my_guardian->get_alignment(); }
         
         void set_id(unsigned nid) { id = nid; }
+
+        void set_name(const std::string & n) { my_name = n; }
         
         bool get_can_grow_in_all_directions(const maze & m) const;
         
@@ -330,6 +417,8 @@ namespace skarabeusz
     class chamber_and_keys
     {
     private:
+        friend class generator;
+        friend class story_interpretation;
         unsigned chamber_id;
         keys my_keys;
         bool done;
@@ -361,6 +450,8 @@ namespace skarabeusz
         virtual void print_latex(std::ostream & s) const = 0;
         virtual void print_html(std::ostream & s) const = 0;
         virtual void print_text(std::ostream & s) const = 0;
+
+        virtual void generate_stories_interpretations(generator & g) {}
 
     };
     
@@ -399,7 +490,80 @@ namespace skarabeusz
         virtual void print_html(std::ostream & s) const override;
         virtual void print_text(std::ostream & s) const override;
     };
+
+    class story
+    {
+    private:
+        friend class generator;
+        friend class story_interpretation;
+        class fact
+        {
+        public:
+            paragraph & fact_paragraph;
+            fact(paragraph & p): fact_paragraph{p} {}
+        };
+
+        std::vector<std::unique_ptr<fact>> vector_of_facts;
+
+        const character& story_author, & story_hero;
+        const character::alignment_type story_alignment;
+
+    public:
+        story(character & a, character & h, character::alignment_type at):
+            story_author{a}, story_hero{h}, story_alignment{at} {}
+
+        int get_amount_of_facts() const { return vector_of_facts.size(); }
+    };
     
+    class story_interpretation: public paragraph_item
+    {
+    private:
+        class fact_interpretation
+        {
+            friend class story_interpretation;
+        private:
+            maze & my_maze;
+            story::fact & my_fact;
+            const character::alignment_type my_teller_alignment;
+            bool my_teller_likes_author;
+            bool my_teller_likes_hero;
+            paragraph & my_here_and_now;
+        public:
+            fact_interpretation(maze & m, story::fact & f,
+                const character::alignment_type teller_alignment,
+                bool teller_likes_author, bool teller_likes_hero, paragraph & here_and_now);
+
+            void print_latex(std::ostream & s) const;
+            void print_html(std::ostream & s) const;
+        };
+
+        const character::alignment_type teller_alignment;
+        paragraph& where_the_story_is_told;
+        character& story_teller;
+        maze & my_maze;
+
+        unsigned my_story_index;
+        bool does_the_teller_like_the_author;
+        bool does_the_teller_like_the_hero;
+
+        std::vector<std::unique_ptr<fact_interpretation>> vector_of_facts_interpretations;
+
+        void print_html_for_transition(std::ostream & s, const fact_interpretation & former, const fact_interpretation & coming) const;
+
+    public:
+        story_interpretation(maze & m, character::alignment_type a, paragraph & p, character & st):
+            my_maze{m},
+            teller_alignment{a},
+            where_the_story_is_told{p},
+            story_teller{st} {}
+
+        virtual void print_latex(std::ostream & s) const override;
+        virtual void print_html(std::ostream & s) const override;
+        virtual void print_text(std::ostream & s) const override;
+
+        virtual void generate_stories_interpretations(generator & g) override;
+
+    };
 
     class paragraph_connection
     {
@@ -407,9 +571,10 @@ namespace skarabeusz
     private:
         paragraph &first, &second;
         bool has_been_processed;
+        int door_object_index;
     public:
         paragraph_connection(paragraph & f, paragraph & s):
-            first{f}, second{s} {}
+            first{f}, second{s}, door_object_index{-1} {}
 
         void set_has_been_processed(bool p)
         {
@@ -420,12 +585,15 @@ namespace skarabeusz
 
         const paragraph & get_first() const { return first; }
         const paragraph & get_second() const { return second; }
+
+        void set_door_object_index(int i) { door_object_index = i; }
     };
     
     class paragraph
     {
     friend class generator;
     friend class hint_you_still_need_i_steps;
+    friend class story_interpretation;
     public:
         enum class paragraph_type { CHAMBER_DESCRIPTION, DISCUSSION, DOOR };
     private:
@@ -438,8 +606,14 @@ namespace skarabeusz
         std::list<std::unique_ptr<paragraph_item>> list_of_paragraph_items;
         paragraph_type type;
         unsigned x,y,z;
+
+        std::vector<int> vector_of_door_object_indeces;
     public:
         paragraph(unsigned n, const chamber_and_keys & c, unsigned nx, unsigned ny, unsigned nz, paragraph_type t);
+
+        void add_door_object_index(int i);
+
+        void generate_stories_interpretations(generator & g);
 
         bool get_distance_has_been_calculated() const { return distance_has_been_calculated; }
 
@@ -528,6 +702,8 @@ namespace skarabeusz
         friend class keys;
         friend class generator;
         friend class collection_of_virtual_door;
+        friend class story_interpretation;
+
         unsigned amount_of_chambers, amount_of_keys, amount_of_paragraphs;
         
         unsigned max_x_range, max_y_range, max_z_range;
@@ -550,7 +726,10 @@ namespace skarabeusz
 
         std::vector<std::unique_ptr<paragraph_connection>> vector_of_paragraph_connections;
         
-        
+        std::vector<std::unique_ptr<character>> vector_of_heroes;
+
+        std::vector<std::unique_ptr<story>> vector_of_stories;
+
     public:
         maze(): amount_of_keys{0} {}
         
@@ -575,9 +754,10 @@ namespace skarabeusz
         void resize(unsigned xr, unsigned yr, unsigned zr);
         
         void create_chambers(unsigned aoc);
-                
-        void create_html(const std::string & prefix, const std::string & html_head_file);        
-        void create_html_index(const std::string & prefix, const std::string & html_head);        
+        const std::string convert_language_to_html_abbreviation(const std::string & language) const;
+
+        void create_html(const std::string & prefix, const std::string & language, const std::string & html_head_file);
+        void create_html_index(const std::string & prefix, const std::string & language, const std::string & html_head);
         void create_latex(const std::string & prefix);
         
         void create_maps_latex(const map_parameters & mp, const std::string & prefix);
@@ -607,7 +787,11 @@ namespace skarabeusz
         void generate_door(generator & g);
         
         std::string get_keys_description(const keys & k) const;
-        
+
+        std::string get_keys_description_in_third_person(const keys & k) const;
+
+        std::string get_chamber_name_in_third_person(const chamber & c) const;
+
         std::string get_keys_description_after_exchange(const keys & k) const;
         
         std::string get_wall_description(unsigned chamber_id, room::direction_type d) const;
@@ -636,8 +820,11 @@ namespace skarabeusz
     
     class generator
     {
+    friend class story_interpretation;
     private:
-        const generator_parameters & parameters;
+        generator_parameters & parameters;
+        constexpr const static unsigned amount_of_stories_per_hero = 3;
+        constexpr const static unsigned amount_of_facts_per_story = 20;
         maze & target;
         
         std::random_device rd;
@@ -661,6 +848,11 @@ namespace skarabeusz
         static const std::string key_names[];
         static const std::string with_the_x_key_names[];
 
+        const static std::string positive_adjectives_good_perspective[];
+        const static std::string negative_adjectives_good_perspective[];
+        const static std::string positive_adjectives_bad_perspective[];
+        const static std::string negative_adjectives_bad_perspective[];
+
         std::map<std::string, bool> map_name_to_taken_flag;
         
         void generate_list_of_keys();
@@ -677,15 +869,39 @@ namespace skarabeusz
         bool process_a_journey_step();
         bool get_there_is_a_transition(const chamber_and_keys & p1, const chamber_and_keys & p2);
         bool get_all_pairs_have_been_done() const;
+        bool get_there_are_paragraphs_leading_to(unsigned paragraph_index) const;
         void process_a_journey_get_candidate(unsigned & candidate_done, unsigned & candidate_not_done) const;
         void generate_paragraphs();
         void calculate_min_distance_to_the_closest_ending();
         void generate_names();        
         std::string get_random_name();
         unsigned get_amount_of_pairs_that_have_been_done() const;
+
+        void generate_heroes();
+        void generate_stories();
+        void generate_stories_interpretations();
+        void generate_chambers_guardians();
+        void generate_chambers_names();
+        void process_door_paragraphs_connections();
+
+        int get_random_author_index();
+        int get_random_hero_index();
+        int get_random_paragraph_index();
+        int get_random_story_index();
+        int get_random_fact_index_from_the_story(int story_index, character::alignment_type a);
+
+        /**
+         * Depending on the parameters we always create GOOD stories, BAD stories, RANDOM stories
+         * or ALIGNMENT_DEPENDENT stories (depending on the author alignment).
+         */
+        character::alignment_type get_random_story_alignment(character::alignment_type author_alignment);
+
+        int get_random_paragraph_index_leading_to(int paragraph_index);
+        bool get_there_is_a_paragraph_connection(const paragraph & p1, const paragraph & p2) const;
+        bool get_leads_to_paragraph(const paragraph & p, int paragraph_index) const;
         
     public:
-        generator(const generator_parameters & gp, maze & t): 
+        generator(generator_parameters & gp, maze & t):
             parameters{gp}, target{t}, gen{rd()},
             x_distr{0, parameters.maze_x_range-1},
             y_distr{0, parameters.maze_y_range-1},
@@ -696,7 +912,8 @@ namespace skarabeusz
         void get_random_room(unsigned & x, unsigned & y, unsigned & z);
         void get_random_room_on_level_z(unsigned & x, unsigned & y, unsigned z);
         void get_random_key_name(std::string & normal_form, std::string & with_the_key_form);
-        
+        character::alignment_type get_random_alignment();
+
         std::mt19937 & get_random_number_generator() { return gen; }
                 
     };
