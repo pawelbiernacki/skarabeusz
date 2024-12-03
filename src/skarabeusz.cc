@@ -213,6 +213,7 @@ void skarabeusz::story_interpretation::generate_stories_interpretations(generato
     std::cout << "the interpreted story " << my_story_index << "\n";
     */
 
+
     does_the_teller_like_the_author = teller_alignment == g.target.vector_of_stories[my_story_index]->story_author.my_alignment;
 
     does_the_teller_like_the_hero = teller_alignment == g.target.vector_of_stories[my_story_index]->story_hero.my_alignment;
@@ -223,8 +224,8 @@ void skarabeusz::story_interpretation::generate_stories_interpretations(generato
     std::cout << "interpreting the story " << my_story_index << "\n";
     std::cout << "does the teller like the author? " << does_the_teller_like_the_author << "\n";
     std::cout << "does the teller like the hero? " << does_the_teller_like_the_hero << "\n";
+    std::cout << "the story contains " << g.target.vector_of_stories[my_story_index]->vector_of_facts.size() << " facts\n";
     */
-    //std::cout << "the story contains " << g.target.vector_of_stories[my_story_index]->vector_of_facts.size() << " facts\n";
 
     int pivot_index = 0;
 
@@ -237,7 +238,9 @@ void skarabeusz::story_interpretation::generate_stories_interpretations(generato
                 vector_of_facts_interpretations.push_back(std::make_unique<fact_interpretation>(
                     my_maze, *g.target.vector_of_stories[my_story_index]->vector_of_facts[i],
                     teller_alignment,
-                    does_the_teller_like_the_author, does_the_teller_like_the_hero, where_the_story_is_told));
+                    does_the_teller_like_the_author,
+                    does_the_teller_like_the_hero,
+                    where_the_story_is_told));
             }
             break;
     }
@@ -284,7 +287,7 @@ bool skarabeusz::generator::get_there_is_a_paragraph_connection(const paragraph 
 
 bool skarabeusz::generator::get_leads_to_paragraph(const paragraph & p, int paragraph_index) const
 {
-    return target.vector_of_paragraphs[paragraph_index]->distance_to_the_closest_ending < p.distance_to_the_closest_ending && get_there_is_a_paragraph_connection(p, *target.vector_of_paragraphs[paragraph_index ]);
+    return target.vector_of_paragraphs[paragraph_index]->distance_to_the_closest_ending + 1 == p.distance_to_the_closest_ending && get_there_is_a_paragraph_connection(p, *target.vector_of_paragraphs[paragraph_index ]);
 }
 
 
@@ -298,9 +301,12 @@ int skarabeusz::generator::get_random_paragraph_index_leading_to(int paragraph_i
             potential_results.push_back(i);
         }
     }
-    std::uniform_int_distribution<unsigned> distr(0, potential_results.size());
+
+    std::cout << "there are " << potential_results.size() << " paragraphs leading to " << paragraph_index << "\n";
+
+    std::uniform_int_distribution<unsigned> distr(0, potential_results.size()-1);
     int index = distr(get_random_number_generator());
-    return index;
+    return potential_results[index];
 }
 
 
@@ -351,14 +357,27 @@ void skarabeusz::generator::generate_stories()
 
                 s->vector_of_facts.push_back(std::move(last_fact));
 
+                /*
+                std::cout << "creating a story that ends with the paragraph "
+                    << last_paragraph_index << ", its distance to the target "
+                    << target.vector_of_paragraphs[last_paragraph_index]->get_distance_to_the_closest_ending() << "\n";
+                */
+
                 for (int k=0; k<amount_of_facts_per_story; k++)
                 {
                     if (!get_there_are_paragraphs_leading_to(last_paragraph_index))
                     {
+                        //std::cout << "there are no paragraphs leading to this, terminate creating the story\n";
                         break;
                     }
 
                     unsigned earlier_index = get_random_paragraph_index_leading_to(last_paragraph_index);
+
+                    /*
+                    std::cout << "adding the paragraph "
+                    << earlier_index << ", its distance to the target "
+                    << target.vector_of_paragraphs[earlier_index]->get_distance_to_the_closest_ending() << "\n";
+                    */
 
                     s->vector_of_facts.push_back(std::make_unique<story::fact>(*target.vector_of_paragraphs[earlier_index]));
 
@@ -368,15 +387,15 @@ void skarabeusz::generator::generate_stories()
                 switch (s->story_alignment)
                 {
                     case character::alignment_type::BAD:
-                        std::reverse(s->vector_of_facts.begin(), s->vector_of_facts.end());
+                        // leave it as it is
                         break;
 
                     case character::alignment_type::GOOD:
-                        // leave it as it is
+                        std::reverse(s->vector_of_facts.begin(), s->vector_of_facts.end());
                         break;
                 }
 
-                if (s->get_amount_of_facts() > 1)
+                if (s->get_amount_of_facts() >= min_amount_of_facts_per_story)
                 {
                     target.vector_of_stories.push_back(std::move(s));
                     break;
@@ -384,7 +403,7 @@ void skarabeusz::generator::generate_stories()
 
                 attempts++;
 
-                if (attempts>1000)
+                if (attempts>10)
                 {
                     std::cerr << "The maze structure makes it impossible to create long stories\n";
                     exit(1);
@@ -520,13 +539,14 @@ void skarabeusz::story_interpretation::fact_interpretation::print_html(std::ostr
                 my_maze.vector_of_door_objects[my_fact.fact_paragraph.vector_of_door_object_indeces[0]]->get_name().c_str(),
                 my_maze.vector_of_door_objects[my_fact.fact_paragraph.vector_of_door_object_indeces[1]]->get_name().c_str()
                 );
+                s << buffer;
             }
             else
             if (my_fact.fact_paragraph.vector_of_door_object_indeces.size()==1)
             {
                 snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("He was standing in front of the %s door."), my_maze.vector_of_door_objects[my_fact.fact_paragraph.vector_of_door_object_indeces[0]]->get_name().c_str());
+                s << buffer;
             }
-            s << buffer;
             break;
     }
 
@@ -639,7 +659,7 @@ void skarabeusz::story_interpretation::print_html(std::ostream & s) const
     {
         s << _("Let me tell you a story.");
     }
-    s << " ";
+    s << "<br/><br/> ";
 
     s << "<p><i>";
 
@@ -667,21 +687,25 @@ void skarabeusz::story_interpretation::print_html(std::ostream & s) const
         return;
     }
 
-    int previous_index = 0;
-
     s << my_maze.get_keys_description_in_third_person(vector_of_facts_interpretations[0]->my_fact.fact_paragraph.my_state.my_keys);
 
     s << my_maze.get_chamber_name_in_third_person(*my_maze.vector_of_chambers[vector_of_facts_interpretations[0]->my_fact.fact_paragraph.my_state.chamber_id]);
+
+
+    snprintf(buffer, SKARABEUSZ_MAX_MESSAGE_BUFFER-1, _("As he later found out he was %i steps away from the goal."), vector_of_facts_interpretations[0]->my_fact.fact_paragraph.get_distance_to_the_closest_ending());
+
+    s << buffer << " ";
 
     //std::cout << "This story has " << vector_of_facts_interpretations.size() << " facts, originally " << my_maze.vector_of_stories[my_story_index]->get_amount_of_facts() << "\n";
 
     for (int i=1; i<vector_of_facts_interpretations.size(); i++)
     {
-        print_html_for_transition(s, *vector_of_facts_interpretations[previous_index], *vector_of_facts_interpretations[i]);
-        previous_index = i;
+        print_html_for_transition(s,
+                                  *vector_of_facts_interpretations[i-1], *vector_of_facts_interpretations[i]);
         s << " ";
 
         vector_of_facts_interpretations[i]->print_html(s);
+
     }
 
     if (vector_of_facts_interpretations.size() > 1)

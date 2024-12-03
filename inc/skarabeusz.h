@@ -833,6 +833,7 @@ namespace skarabeusz
         generator_parameters & parameters;
         constexpr const static unsigned amount_of_stories_per_hero = 3;
         constexpr const static unsigned amount_of_facts_per_story = 20;
+        constexpr const static unsigned min_amount_of_facts_per_story = 4;
         maze & target;
         
         std::random_device rd;
